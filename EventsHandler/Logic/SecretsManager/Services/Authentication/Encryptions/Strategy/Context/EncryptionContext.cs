@@ -1,0 +1,48 @@
+﻿// © 2023, Worth Systems.
+
+using Microsoft.IdentityModel.Tokens;
+using SecretsManager.Services.Authentication.Encryptions.Strategy.Interfaces;
+
+namespace SecretsManager.Services.Authentication.Encryptions.Strategy.Context
+{
+    /// <summary>
+    /// The context on which a specific <see cref="IJwtEncryptionStrategy"/> will be executed.
+    /// </summary>
+    public sealed class EncryptionContext
+    {
+        internal IJwtEncryptionStrategy Strategy { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EncryptionContext"/> class.
+        /// </summary>
+        /// <param name="strategy">The encryption strategy to be used.</param>
+        public EncryptionContext(IJwtEncryptionStrategy strategy)
+        {
+            this.Strategy = strategy;
+        }
+
+        /// <inheritdoc cref="IJwtEncryptionStrategy.GetSecurityKey(string)"/>
+        public SecurityKey GetSecurityKey(string secret = "")
+        {
+            return this.Strategy.GetSecurityKey(secret);
+        }
+
+        /// <inheritdoc cref="IJwtEncryptionStrategy.GetJwtToken(SecurityKey, string, string, DateTime, string, string)"/>
+        public string GetJwtToken(SecurityKey securityKey, string issuer, string audience, DateTime expiresAt, string userId, string userRepresentation)
+        {
+            return this.Strategy.GetJwtToken(securityKey, issuer, audience, expiresAt, userId, userRepresentation);
+        }
+
+        /// <inheritdoc cref="IJwtEncryptionStrategy.GetJwtToken(SecurityKey, string, string, double, string, string)"/>
+        public string GetJwtToken(SecurityKey securityKey, string issuer, string audience, double expiresInMinutes, string userId, string userRepresentation)
+        {
+            return this.Strategy.GetJwtToken(securityKey, issuer, audience, expiresInMinutes, userId, userRepresentation);
+        }
+
+        /// <inheritdoc cref="IJwtEncryptionStrategy.SaveJwtToken(string)"/>
+        internal void SaveJwtToken(string jwtToken)
+        {
+            this.Strategy.SaveJwtToken(jwtToken);
+        }
+    }
+}

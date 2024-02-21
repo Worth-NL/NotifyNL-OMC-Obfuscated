@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "SecretsManager": {
+      "commandName": "Project"
+    }
+  }
+}

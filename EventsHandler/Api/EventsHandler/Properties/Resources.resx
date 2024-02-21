@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Deserialization_ERROR_InvalidJson_Message" xml:space="preserve">
+    <value>The JSON payload is invalid.</value>
+  </data>
+  <data name="Deserialization_ERROR_InvalidJson_Reason1" xml:space="preserve">
+    <value>SENDER: The input cannot be recognized as JSON format.</value>
+  </data>
+  <data name="Deserialization_ERROR_NotDeserialized_Notification_Properties_Message" xml:space="preserve">
+    <value>Required properties are missing in the given JSON payload.</value>
+  </data>
+  <data name="Deserialization_ERROR_NotDeserialized_Notification_Properties_Reason1" xml:space="preserve">
+    <value>SENDER: The standard JSON schema was recently changed and some mandatory properties were removed from it.</value>
+  </data>
+  <data name="Deserialization_ERROR_NotDeserialized_Notification_Properties_Reason2" xml:space="preserve">
+    <value>RECEIVER: In the POCO model new [Required] properties were added, causing a mismatch with the standard JSON schema.</value>
+  </data>
+  <data name="Deserialization_ERROR_NotDeserialized_Notification_Value_Message" xml:space="preserve">
+    <value>Received value could not be recognized (might be unexpected).</value>
+  </data>
+  <data name="Deserialization_ERROR_NotDeserialized_Notification_Value_Reason1" xml:space="preserve">
+    <value>SENDER: In the JSON schema some data (value) of property (key) has a different type, format, or is out of range than supported in the POCO model.</value>
+  </data>
+  <data name="Deserialization_ERROR_NotDeserialized_Notification_Value_Reason2" xml:space="preserve">
+    <value>RECEIVER: In the POCO model the type, format or range of expected data was recently changed, causing a mismatch with the JSON schema.</value>
+  </data>
+  <data name="Deserialization_INFO_NotDeserialized_Attributes_Properties_Message" xml:space="preserve">
+    <value>Some values of properties in the nested 'attributes' ('kenmerken') in the POCO model are missing.</value>
+  </data>
+  <data name="Deserialization_INFO_NotDeserialized_Attributes_Properties_Reason1" xml:space="preserve">
+    <value>SENDER: In the JSON schema some properties from the nested 'attributes' ('kenmerken') are missing, although they were previously defined in the POCO model.</value>
+  </data>
+  <data name="Deserialization_INFO_NotDeserialized_Attributes_Properties_Reason2" xml:space="preserve">
+    <value>SENDER: In the JSON schema some keys of properties in the nested 'attributes' ('kenmerken') were renamed, causing mismatch with the POCO model.</value>
+  </data>
+  <data name="Deserialization_INFO_NotDeserialized_Attributes_Properties_Reason3" xml:space="preserve">
+    <value>RECEIVER: In the POCO model the custom names of some attributes are different from the keys of properties in the nested 'attributes' ('kenmerken') in the received JSON payload.</value>
+  </data>
+  <data name="Deserialization_INFO_UnexpectedData_Attributes_Message" xml:space="preserve">
+    <value>The JSON payload contains more properties in the nested 'attributes' ('kenmerken') than expected by the POCO model.</value>
+  </data>
+  <data name="Deserialization_INFO_UnexpectedData_Attributes_Reason1" xml:space="preserve">
+    <value>SENDER: The JSON schema was recently changed and some properties in the nested 'attributes' ('kenmerken') were added to it.</value>
+  </data>
+  <data name="Deserialization_INFO_UnexpectedData_Attributes_Reason2" xml:space="preserve">
+    <value>RECEIVER: In the POCO model some existing properties were removed from the nested 'attributes', causing a mismatch with the JSON schema.</value>
+  </data>
+  <data name="Deserialization_INFO_UnexpectedData_Notification_Message" xml:space="preserve">
+    <value>The JSON payload contains more root 'notification' properties than expected by the POCO model.</value>
+  </data>
+  <data name="Deserialization_INFO_UnexpectedData_Notification_Reason1" xml:space="preserve">
+    <value>SENDER: The JSON schema was recently changed and some root 'notification' properties were added to it.</value>
+  </data>
+  <data name="Deserialization_INFO_UnexpectedData_Notification_Reason2" xml:space="preserve">
+    <value>RECEIVER: In the POCO model some existing properties were removed from the root 'notification', causing a mismatch with the JSON schema.</value>
+  </data>
+  <data name="HttpRequest_ERROR_HttpsProtocolExpected" xml:space="preserve">
+    <value>The HTTPS protocol is expected.</value>
+  </data>
+  <data name="HttpRequest_ERROR_Message" xml:space="preserve">
+    <value>The HTTP Request sent to external Web service failed.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoCase" xml:space="preserve">
+    <value>HTTP Request: Case could not be retrieved from OpenZaak Web service.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoCaseDetails" xml:space="preserve">
+    <value>HTTP Request: Case details could not be retrieved from OpenZaak Web service.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoCaseRole" xml:space="preserve">
+    <value>HTTP Request: Case role could not be retrieved from OpenZaak Web service.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoCaseStatuses" xml:space="preserve">
+    <value>HTTP Request: Case statuses could not be retrieved from OpenZaak Web service.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoCaseStatusType" xml:space="preserve">
+    <value>HTTP Request: Case status type could not be retrieved from OpenZaak Web service.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoCitizenDetails" xml:space="preserve">
+    <value>HTTP Request: Citizen details could not be retrieved from OpenKlant Web service.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoMainObject" xml:space="preserve">
+    <value>HTTP Request: Main Object could not be retrieved from OpenZaak Web service.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoFeedbackKlant" xml:space="preserve">
+    <value>HTTP Request: The Contact Moment could not be retrieved from OpenKlant Web service.</value>
+  </data>
+  <data name="HttpRequest_ERROR_NoSourceOrganization" xml:space="preserve">
+    <value>HTTP Request: The notification does not contain source organization ('bronorganisatie') which is crucial!</value>
+  </data>
+  <data name="HttpRequest_ERROR_Reason1" xml:space="preserve">
+    <value>RECEIVER: The requested resource is unavailable or not existing.</value>
+  </data>
+  <data name="HttpRequest_ERROR_Reason2" xml:space="preserve">
+    <value>SENDER: The network configuration is improper.</value>
+  </data>
+  <data name="Operation_ERROR_Unknown_ValidationIssue_Message" xml:space="preserve">
+    <value>An unknown validation issue occurred.</value>
+    <comment>HTTP Status Code = 500</comment>
+  </data>
+  <data name="Operation_RESULT_Deserialization_Failure" xml:space="preserve">
+    <value>Notification could not be recognized (deserialized).</value>
+    <comment>HTTP Status Code = 406</comment>
+  </data>
+  <data name="Operation_RESULT_Deserialization_Partial" xml:space="preserve">
+    <value>Notification was partially recognized (deserialized).</value>
+    <comment>HTTP Status Code = 206</comment>
+  </data>
+  <data name="Operation_RESULT_Deserialization_Success" xml:space="preserve">
+    <value>Notification was successfully recognized (deserialized).</value>
+    <comment>HTTP Status Code = 200</comment>
+  </data>
+  <data name="Operation_RESULT_HttpRequest_Failure" xml:space="preserve">
+    <value>Bad request.</value>
+    <comment>HTTP Status Code = 400</comment>
+  </data>
+  <data name="Operation_RESULT_NotImplemented" xml:space="preserve">
+    <value>This operation is not implemented. Internal server error.</value>
+    <comment>HTTP Status Code = 501</comment>
+  </data>
+  <data name="Operation_RESULT_Internal" xml:space="preserve">
+    <value>An unknown issue occurred. Internal server error.</value>
+    <comment>HTTP Status Code = 501</comment>
+  </data>
+  <data name="Processing_ERROR_Notification_DeliveryMethodUnknown" xml:space="preserve">
+    <value>The notification method ('aanmaakkanaal') is unknown. The citizen data are incomplete. There should be declared at least one distribution channel: SMS, e-mail, Both, or None.</value>
+  </data>
+  <data name="Processing_ERROR_Notification_Test" xml:space="preserve">
+    <value>The test notification was received and ignored.</value>
+    <comment>HTTP Status Code = 206</comment>
+  </data>
+  <data name="Processing_ERROR_Scenario_DataNotFound" xml:space="preserve">
+    <value>It was not possible to retrieve data necessary to process this notification.</value>
+  </data>
+  <data name="Processing_ERROR_Scenario_NotificationNotSent" xml:space="preserve">
+    <value>The notification has not been sent to Notify NL.</value>
+  </data>
+  <data name="Processing_ERROR_Scenario_NotImplemented" xml:space="preserve">
+    <value>It was not possible to determine what to do with the received notification.</value>
+  </data>
+  <data name="Processing_ERROR_Telemetry_CompletionNotSent" xml:space="preserve">
+    <value>The notification was sent but the completion status could not be delivered to the external telemetry API endpoint.</value>
+  </data>
+  <data name="Processing_SUCCESS_Scenario_NotificationSent" xml:space="preserve">
+    <value>The notification has been successfully processed and sent to Notify NL.</value>
+  </data>
+  <data name="Swagger_Authentication_Description" xml:space="preserve">
+    <value>Insert received JWT token here</value>
+    <comment>Swagger UI</comment>
+  </data>
+  <data name="Swagger_Description" xml:space="preserve">
+    <value>Application handling the workflow between multiple Notify NL components</value>
+    <comment>Swagger UI</comment>
+  </data>
+  <data name="Swagger_Title" xml:space="preserve">
+    <value>Notify NL - Events Handler</value>
+    <comment>Swagger UI</comment>
+  </data>
+  <data name="Swagger_Version" xml:space="preserve">
+    <value>1.0</value>
+    <comment>Swagger UI</comment>
+  </data>
+  <data name="Configuration_ERROR_ContainsEndpoint" xml:space="preserve">
+    <value>In the configuration use only domain (without endpoint):</value>
+  </data>
+  <data name="Configuration_ERROR_ContainsHttp" xml:space="preserve">
+    <value>In the configuration use only domain (without http or https):</value>
+  </data>
+  <data name="Configuration_ERROR_InvalidTemplateId" xml:space="preserve">
+    <value>In the configuration the Template Id is invalid (should be: 00000000-0000-0000-0000-000000000000):</value>
+  </data>
+  <data name="Configuration_ERROR_ValueNotFoundOrEmpty" xml:space="preserve">
+    <value>The configuration does not contain a given value, or it is empty:</value>
+  </data>
+  <data name="Logging_Client_Initialized" xml:space="preserve">
+    <value>The Http Client was initialized for organization:</value>
+  </data>
+  <data name="Configuration_ERROR_EnvironmentVariableGetNull" xml:space="preserve">
+    <value>The looked up Environent Variable could not be found or the key is missing / not existing.</value>
+  </data>
+  <data name="Configuration_ERROR_EnvironmentNotSupported" xml:space="preserve">
+    <value>The retrieving of Environment Variable failed. The operation system (OS) is not yet supported.</value>
+  </data>
+</root>

@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Project -->
+    <AssemblyName>NotifyNL.Utilities</AssemblyName>
+    
+    <TargetFramework>net7.0</TargetFramework>
+    
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Packages -->
+  <ItemGroup>
+    <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+  </ItemGroup>
+  
+  <!-- Projects -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Api\EventsHandler\EventsHandler.csproj" />
+  </ItemGroup>
+
+  <!-- Exposition to internal members -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="NotifyNL.IntegrationTests" />
+    <InternalsVisibleTo Include="NotifyNL.UnitTests" />
+  </ItemGroup>
+
+  <!-- Settings -->
+  <ItemGroup>
+    <Content Include="..\..\..\Api\EventsHandler\appsettings.Test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
