@@ -20,5 +20,14 @@ namespace EventsHandler.Services.DataLoading.Interfaces
         /// </returns>
         /// <exception cref="KeyNotFoundException">The provided key is missing or invalid.</exception>
         internal TData GetData<TData>(string key);
+
+        /// <summary>
+        /// Precedes the (eventually formatted) node name with a respective separator.
+        /// </summary>
+        /// <param name="nodeName">The name of the configuration node.</param>
+        /// <returns>
+        ///   The formatted node path.
+        /// </returns>
+        internal string GetNodePath(string nodeName);
     }
 }
