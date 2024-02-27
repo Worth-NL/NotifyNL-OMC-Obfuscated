@@ -14,8 +14,6 @@ namespace EventsHandler.Extensions
     /// </summary>
     internal static partial class ConfigurationExtensions  // NOTE: "partial" is introduced by the new RegEx generation approach
     {
-        private const string Separator = ":";
-
         private static readonly string s_worthJwtPath =
             $"{nameof(WebApiConfiguration.Notify)}" +
             $"{GetNodePath(nameof(WebApiConfiguration.Notify.Authorization))}" +
@@ -124,10 +122,5 @@ namespace EventsHandler.Extensions
         
         internal static T GetConfigValueFromPathWithNode<T>(this IConfiguration configuration, string currentPath, string nodeName)
             => configuration.GetConfigValue<T>(GetPathWithNode(currentPath, nodeName));
-
-        internal static string GetPathWithNode(this string currentPath, string nodeName)
-            => $"{currentPath}{GetNodePath(nodeName)}";
-
-        private static string GetNodePath(string nodeName) => $"{Separator}{nodeName}";
     }
 }

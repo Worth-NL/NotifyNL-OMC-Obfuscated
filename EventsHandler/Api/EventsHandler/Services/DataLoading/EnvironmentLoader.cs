@@ -1,16 +1,17 @@
 ﻿// © 2024, Worth Systems.
 
 using EventsHandler.Properties;
+using EventsHandler.Services.DataLoading.Base;
 using EventsHandler.Services.DataLoading.Interfaces;
 
 namespace EventsHandler.Services.DataLoading
 {
     /// <inheritdoc cref="ILoadingService"/>
-    internal sealed class EnvironmentLoader : ILoadingService
+    internal sealed class EnvironmentLoader : BaseLoader
     {
         /// <inheritdoc cref="ILoadingService.GetData{T}(string)"/>
         /// <exception cref="NotImplementedException">The operating system (OS) is not supported.</exception>
-        TData ILoadingService.GetData<TData>(string key)
+        protected override TData GetData<TData>(string key)
         {
             // The key is missing
             if (string.IsNullOrWhiteSpace(key))
@@ -28,6 +29,14 @@ namespace EventsHandler.Services.DataLoading
             }
 
             throw new NotImplementedException(Resources.Configuration_ERROR_EnvironmentNotSupported);
+        }
+
+        /// <inheritdoc cref="BaseLoader.GetNodePath(string)"/>
+        protected override string GetNodePath(string nodeName)
+        {
+            const string separator = "_";
+
+            return $"{separator}{nodeName.ToUpper()}";
         }
     }
 }

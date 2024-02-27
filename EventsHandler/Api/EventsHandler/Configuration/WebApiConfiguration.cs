@@ -3,6 +3,7 @@
 using EventsHandler.Extensions;
 using EventsHandler.Services.DataLoading.Strategy.Interfaces;
 using System.Collections.Concurrent;
+using EventsHandler.Services.DataLoading.Enums;
 using ConfigurationExtensions = EventsHandler.Extensions.ConfigurationExtensions;
 
 namespace EventsHandler.Configuration

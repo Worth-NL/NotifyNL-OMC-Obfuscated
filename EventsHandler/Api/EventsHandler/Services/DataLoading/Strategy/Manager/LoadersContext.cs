@@ -43,12 +43,17 @@ namespace EventsHandler.Services.DataLoading.Strategy.Manager
         /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
         TData ILoadingService.GetData<TData>(string key)
         {
+            ValidateContext();
+
+            return this._loadingService!.GetData<TData>(key);
+        }
+
+        private void ValidateContext()
+        {
             if (this._loadingService == null)
             {
                 throw new NotImplementedException(Resources.Processing_ERROR_Loader_NotImplemented);
             }
-
-            return this._loadingService.GetData<TData>(key);
         }
         #endregion
     }

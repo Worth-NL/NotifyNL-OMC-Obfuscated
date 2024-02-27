@@ -2,12 +2,13 @@
 
 using EventsHandler.Extensions;
 using EventsHandler.Properties;
+using EventsHandler.Services.DataLoading.Base;
 using EventsHandler.Services.DataLoading.Interfaces;
 
 namespace EventsHandler.Services.DataLoading
 {
     /// <inheritdoc cref="ILoadingService"/>
-    internal sealed class ConfigurationLoader : ILoadingService
+    internal sealed class ConfigurationLoader : BaseLoader
     {
         private readonly IConfiguration _configuration;
 
@@ -21,7 +22,7 @@ namespace EventsHandler.Services.DataLoading
 
         /// <inheritdoc cref="ILoadingService.GetData{T}(string)"/>
         /// <exception cref="ArgumentException"/>
-        TData ILoadingService.GetData<TData>(string key)
+        protected override TData GetData<TData>(string key)
         {
             // The key is missing
             if (string.IsNullOrWhiteSpace(key))
@@ -30,6 +31,14 @@ namespace EventsHandler.Services.DataLoading
             }
 
             return this._configuration.GetConfigValue<TData>(key);
+        }
+
+        /// <inheritdoc cref="BaseLoader.GetNodePath(string)"/>
+        protected override string GetNodePath(string nodeName)
+        {
+            const string separator = ":";
+
+            return $"{separator}{nodeName}";
         }
     }
 }
