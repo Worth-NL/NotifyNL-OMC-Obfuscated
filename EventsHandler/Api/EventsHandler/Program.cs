@@ -229,7 +229,7 @@ namespace EventsHandler
 
         private static void RegisterNotifyStrategies(this IServiceCollection services)
         {
-            // Strategy Resolver (returning dedicated scenarios strategy)
+            // Strategy Resolver (returning dedicated scenarios' strategy)
             services.AddSingleton<IScenariosResolver, ScenariosResolver>();
 
             // Strategies

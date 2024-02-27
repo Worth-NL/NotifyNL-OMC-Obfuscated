@@ -26,12 +26,12 @@ namespace EventsHandler.Configuration
         /// <summary>
         /// Initializes a new instance of the <see cref="WebApiConfiguration"/> class.
         /// </summary>
-        /// <param name="dataLoaderContext">The strategy context using a specific data provider configuration loader.</param>
-        public WebApiConfiguration(ILoadersContext dataLoaderContext)  // NOTE: The only constructor to be used with Dependency Injection
+        /// <param name="loaderContext">The strategy context using a specific data provider configuration loader.</param>
+        public WebApiConfiguration(ILoadersContext loaderContext)  // NOTE: The only constructor to be used with Dependency Injection
         {
             // Recreating structure of "appsettings.json" or "secrets.json" files to use them later as objects
-            this.Notify = new NotifyComponent(dataLoaderContext, nameof(this.Notify));
-            this.User = new UserComponent(dataLoaderContext, nameof(this.User));
+            this.Notify = new NotifyComponent(loaderContext, nameof(this.Notify));
+            this.User = new UserComponent(loaderContext, nameof(this.User));
         }
 
         /// <summary>
