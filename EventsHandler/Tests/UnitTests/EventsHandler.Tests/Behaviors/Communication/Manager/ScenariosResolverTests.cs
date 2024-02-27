@@ -16,13 +16,13 @@ using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
 {
     [TestFixture]
-    public sealed class ScenariosManagerTests
+    public sealed class ScenariosResolverTests
     {
         private Mock<INotifyScenario>? _mockedNotifyScenario;
         private Mock<IDataQueryService<NotificationEvent>>? _mockedDataQuery;
 
         private ServiceProvider? _serviceProvider;
-        private IScenariosManager? _scenariosManager;
+        private IScenariosResolver? _scenariosManager;
 
         [OneTimeSetUp]
         public void InitializeTests()
@@ -46,7 +46,7 @@ namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
             this._serviceProvider = serviceCollection.BuildServiceProvider();
 
             // Scenarios Manager
-            this._scenariosManager = new ScenariosManager(this._serviceProvider, this._mockedDataQuery.Object);
+            this._scenariosManager = new ScenariosResolver(this._serviceProvider, this._mockedDataQuery.Object);
         }
 
         [SetUp]
