@@ -1,18 +1,19 @@
 ﻿// © 2024, Worth Systems.
 
+using EventsHandler.Services.DataLoading.Enums;
 using EventsHandler.Services.DataLoading.Interfaces;
 
 namespace EventsHandler.Services.DataLoading.Strategy.Interfaces
 {
     /// <summary>
-    /// The <see cref="ILoadingService"/>s strategies context behaving like a facade for a specific Data Access Object (DAO).
+    /// The strategy context for <see cref="ILoadingService"/> strategies - acting like a facade for a specific Data Access Object (DAO) providers.
     /// </summary>
-    public interface ILoadersContext : ILoadingService
+    public interface ILoadersContext
     {
         /// <summary>
-        /// Sets the specific loader.
+        /// Sets the specific DAO (Data Access Object) data provider / aka. "Loader".
         /// </summary>
-        /// <param name="loadingService">The specific loader to be set.</param>
-        internal void SetLoader(ILoadingService loadingService);
+        /// <param name="loaderType">The specific loader to be set.</param>
+        internal void SetLoader(LoaderTypes loaderType);
     }
 }

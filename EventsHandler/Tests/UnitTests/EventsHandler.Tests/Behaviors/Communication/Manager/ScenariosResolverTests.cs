@@ -7,11 +7,10 @@ using EventsHandler.Behaviors.Communication.Strategy.Models.DTOs;
 using EventsHandler.Behaviors.Mapping.Enums.NotificatieApi;
 using EventsHandler.Behaviors.Mapping.Models.POCOs.NotificatieApi;
 using EventsHandler.Configuration;
-using EventsHandler.Services.DataLoading.Interfaces;
+using EventsHandler.Services.DataLoading.Strategy.Interfaces;
 using EventsHandler.Services.DataQuerying.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
 {
@@ -27,8 +26,7 @@ namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
         [OneTimeSetUp]
         public void InitializeTests()
         {
-            var mockedConfiguration = new Mock<IConfiguration>(MockBehavior.Loose);
-            var webApiConfiguration = new WebApiConfiguration(mockedConfiguration.Object, new Mock<ILoadingService>().Object);
+            var webApiConfiguration = new WebApiConfiguration(new Mock<ILoadersContext>().Object);
 
             // Mocked services
             this._mockedNotifyScenario = new Mock<INotifyScenario>(MockBehavior.Strict);

@@ -10,7 +10,7 @@ namespace EventsHandler.Services.DataLoading
     {
         /// <inheritdoc cref="ILoadingService.GetData{T}(string)"/>
         /// <exception cref="NotImplementedException">The operating system (OS) is not supported.</exception>
-        T ILoadingService.GetData<T>(string key)
+        TData ILoadingService.GetData<TData>(string key)
         {
             // The key is missing
             if (string.IsNullOrWhiteSpace(key))
@@ -24,7 +24,7 @@ namespace EventsHandler.Services.DataLoading
                 object value = Environment.GetEnvironmentVariable(key)
                     ?? throw new KeyNotFoundException(Resources.Configuration_ERROR_EnvironmentVariableGetNull);
 
-                return (T)Convert.ChangeType(value, typeof(T));
+                return (TData)Convert.ChangeType(value, typeof(TData));
             }
 
             throw new NotImplementedException(Resources.Configuration_ERROR_EnvironmentNotSupported);

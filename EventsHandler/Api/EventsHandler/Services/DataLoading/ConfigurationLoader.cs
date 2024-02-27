@@ -21,7 +21,7 @@ namespace EventsHandler.Services.DataLoading
 
         /// <inheritdoc cref="ILoadingService.GetData{T}(string)"/>
         /// <exception cref="ArgumentException"/>
-        T ILoadingService.GetData<T>(string key)
+        TData ILoadingService.GetData<TData>(string key)
         {
             // The key is missing
             if (string.IsNullOrWhiteSpace(key))
@@ -29,7 +29,7 @@ namespace EventsHandler.Services.DataLoading
                 throw new KeyNotFoundException(Resources.Configuration_ERROR_ValueNotFoundOrEmpty);
             }
 
-            return this._configuration.GetConfigValue<T>(key);
+            return this._configuration.GetConfigValue<TData>(key);
         }
     }
 }

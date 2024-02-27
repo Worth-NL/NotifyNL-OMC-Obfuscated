@@ -2,8 +2,7 @@
 
 using EventsHandler.Configuration;
 using EventsHandler.Properties;
-using EventsHandler.Services.DataLoading.Interfaces;
-using EventsHandler.Utilities._TestHelpers;
+using EventsHandler.Services.DataLoading.Strategy.Interfaces;
 using Moq;
 
 namespace EventsHandler.UnitTests.Configuration
@@ -11,7 +10,7 @@ namespace EventsHandler.UnitTests.Configuration
     [TestFixture]
     public sealed class WepAbiConfigurationTests
     {
-        [Ignore("Hack"), Test]
+        [Test]
         public void InConfig_ExistingProperties_AllAreMapped()
         {
             // Assert
@@ -19,7 +18,7 @@ namespace EventsHandler.UnitTests.Configuration
             {
                 #pragma warning disable IDE0008  // Explicit types are too long and not necessary to be used here
                 // ReSharper disable SuggestVarOrType_SimpleTypes
-                var configuration = new WebApiConfiguration(ConfigurationHandler.GetConfiguration(), new Mock<ILoadingService>().Object);
+                var configuration = new WebApiConfiguration(new Mock<ILoadersContext>().Object);
 
                 // Authorization | JWT
                 var jwt = configuration.Notify.Authorization.JWT;
@@ -54,7 +53,7 @@ namespace EventsHandler.UnitTests.Configuration
             });
         }
 
-        [Ignore("Hack"), TestCaseSource(nameof(GetTestCases))]
+        [TestCaseSource(nameof(GetTestCases))]
         public void InConfig_InvalidProperties_ThrowsExpectedExceptions(
             (string CaseId, TestDelegate Logic, string ExpectedErrorMessage) test)
         {
@@ -66,7 +65,7 @@ namespace EventsHandler.UnitTests.Configuration
 
         private static IEnumerable<(string CaseId, TestDelegate ActualMethod, string ExpectedErrorMessage)> GetTestCases()
         {
-            var webApiConfiguration = new WebApiConfiguration(ConfigurationHandler.GetConfiguration(), new Mock<ILoadingService>().Object);
+            var webApiConfiguration = new WebApiConfiguration(new Mock<ILoadersContext>().Object);
 
             // Invalid: Not existing
             yield return ("#1", () => webApiConfiguration.User.API.BaseUrl.NotifyNL(), Resources.Configuration_ERROR_ValueNotFoundOrEmpty);

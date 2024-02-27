@@ -11,6 +11,9 @@ using EventsHandler.Configuration;
 using EventsHandler.Constants;
 using EventsHandler.Extensions;
 using EventsHandler.Properties;
+using EventsHandler.Services.DataLoading;
+using EventsHandler.Services.DataLoading.Strategy.Interfaces;
+using EventsHandler.Services.DataLoading.Strategy.Manager;
 using EventsHandler.Services.DataProcessing;
 using EventsHandler.Services.DataProcessing.Interfaces;
 using EventsHandler.Services.DataQuerying;
@@ -44,8 +47,6 @@ using SecretsManager.Services.Authentication.Encryptions.Strategy.Context;
 using SecretsManager.Services.Authentication.Encryptions.Strategy.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
-using EventsHandler.Services.DataLoading;
-using EventsHandler.Services.DataLoading.Interfaces;
 
 namespace EventsHandler
 {
@@ -218,17 +219,18 @@ namespace EventsHandler
 
         private static void RegisterLoadingStrategies(this IServiceCollection services)
         {
-            // Manager (serving as Context handler)
-            services.AddSingleton<IScenariosManager, ScenariosManager>();
+            // Strategy Context (acting like loader strategy facade)
+            services.AddSingleton<ILoadersContext, LoadersContext>();
 
             // Strategies
-            services.AddSingleton<ILoadingService, EnvironmentLoader>();
+            services.AddSingleton<ConfigurationLoader>();
+            services.AddSingleton<EnvironmentLoader>();
         }
 
         private static void RegisterNotifyStrategies(this IServiceCollection services)
         {
-            // Manager (serving as Context handler)
-            services.AddSingleton<IScenariosManager, ScenariosManager>();
+            // Strategy Resolver (returning dedicated scenarios strategy)
+            services.AddSingleton<IScenariosResolver, ScenariosResolver>();
 
             // Strategies
             services.AddSingleton<CaseCreatedScenario>();

@@ -1,7 +1,7 @@
 ﻿// © 2023, Worth Systems.
 
 using EventsHandler.Extensions;
-using EventsHandler.Services.DataLoading.Interfaces;
+using EventsHandler.Services.DataLoading.Strategy.Interfaces;
 using System.Collections.Concurrent;
 using ConfigurationExtensions = EventsHandler.Extensions.ConfigurationExtensions;
 
@@ -26,13 +26,12 @@ namespace EventsHandler.Configuration
         /// <summary>
         /// Initializes a new instance of the <see cref="WebApiConfiguration"/> class.
         /// </summary>
-        /// <param name="configuration">The deserialized application configuration.</param>
-        /// <param name="loadingService">The loading service used to obtain some configurations.</param>
-        public WebApiConfiguration(IConfiguration configuration, ILoadingService loadingService)  // NOTE: The only constructor to be used with Dependency Injection
+        /// <param name="dataLoaderContext">The strategy context using a specific data provider configuration loader.</param>
+        public WebApiConfiguration(ILoadersContext dataLoaderContext)  // NOTE: The only constructor to be used with Dependency Injection
         {
             // Recreating structure of "appsettings.json" or "secrets.json" files to use them later as objects
-            this.Notify = new NotifyComponent(configuration, loadingService, nameof(this.Notify));
-            this.User = new UserComponent(configuration, loadingService, nameof(this.User));
+            this.Notify = new NotifyComponent(dataLoaderContext, nameof(this.Notify));
+            this.User = new UserComponent(dataLoaderContext, nameof(this.User));
         }
 
         /// <summary>
@@ -68,10 +67,10 @@ namespace EventsHandler.Configuration
             /// <summary>
             /// Initializes a new instance of the <see cref="NotifyComponent"/> class.
             /// </summary>
-            public NotifyComponent(IConfiguration configuration, ILoadingService loadingService, string parentName)
+            public NotifyComponent(ILoadersContext loadersContext, string parentName)
             {
-                this.Authorization = new AuthorizationComponent(configuration, loadingService, parentName);
-                this.API = new ApiComponent(configuration, loadingService, parentName);
+                this.Authorization = new AuthorizationComponent(loadersContext, parentName);
+                this.API = new ApiComponent(loadersContext, parentName);
             }
 
             /// <summary>
@@ -88,12 +87,12 @@ namespace EventsHandler.Configuration
                 /// <summary>
                 /// Initializes a new instance of the <see cref="AuthorizationComponent"/> class.
                 /// </summary>
-                internal AuthorizationComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                internal AuthorizationComponent(ILoadersContext loadersContext, string parentPath)
                 {
                     string currentPath = parentPath.GetPathWithNode(nameof(Authorization));
 
-                    this.JWT = new JwtComponent(configuration, loadingService, currentPath);
-                    this.Key = new KeyComponent(configuration, loadingService, currentPath);
+                    this.JWT = new JwtComponent(loadersContext, currentPath);
+                    this.Key = new KeyComponent(loadersContext, currentPath);
                 }
 
                 /// <summary>
@@ -101,17 +100,15 @@ namespace EventsHandler.Configuration
                 /// </summary>
                 internal sealed record JwtComponent
                 {
-                    private readonly IConfiguration _configuration;
-                    private readonly ILoadingService _loadingService;
+                    private readonly ILoadersContext _loadersContext;
                     private readonly string _currentPath;
 
                     /// <summary>
                     /// Initializes a new instance of the <see cref="JwtComponent"/> class.
                     /// </summary>
-                    internal JwtComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                    internal JwtComponent(ILoadersContext loadersContext, string parentPath)
                     {
-                        this._configuration = configuration;
-                        this._loadingService = loadingService;
+                        this._loadersContext = loadersContext;
                         this._currentPath = parentPath.GetPathWithNode(nameof(JWT));
                     }
 
@@ -145,17 +142,15 @@ namespace EventsHandler.Configuration
                 /// </summary>
                 internal sealed record KeyComponent
                 {
-                    private readonly IConfiguration _configuration;
-                    private readonly ILoadingService _loadingService;
+                    private readonly ILoadersContext _loadersContext;
                     private readonly string _currentPath;
 
                     /// <summary>
                     /// Initializes a new instance of the <see cref="KeyComponent"/> class.
                     /// </summary>
-                    internal KeyComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                    internal KeyComponent(ILoadersContext loadersContext, string parentPath)
                     {
-                        this._configuration = configuration;
-                        this._loadingService = loadingService;
+                        this._loadersContext = loadersContext;
                         this._currentPath = parentPath.GetPathWithNode(nameof(Key));
                     }
 
@@ -180,11 +175,11 @@ namespace EventsHandler.Configuration
                 /// <summary>
                 /// Initializes a new instance of the <see cref="ApiComponent"/> class.
                 /// </summary>
-                internal ApiComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                internal ApiComponent(ILoadersContext loadersContext, string parentPath)
                 {
                     string currentPath = parentPath.GetPathWithNode(nameof(API));
 
-                    this.BaseUrl = new BaseUrlComponent(configuration, loadingService, currentPath);
+                    this.BaseUrl = new BaseUrlComponent(loadersContext, currentPath);
                 }
 
                 /// <summary>
@@ -192,17 +187,15 @@ namespace EventsHandler.Configuration
                 /// </summary>
                 internal sealed record BaseUrlComponent
                 {
-                    private readonly IConfiguration _configuration;
-                    private readonly ILoadingService _loadingService;
+                    private readonly ILoadersContext _loadersContext;
                     private readonly string _currentPath;
 
                     /// <summary>
                     /// Initializes a new instance of the <see cref="BaseUrlComponent"/> class.
                     /// </summary>
-                    internal BaseUrlComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                    internal BaseUrlComponent(ILoadersContext loadersContext, string parentPath)
                     {
-                        this._configuration = configuration;
-                        this._loadingService = loadingService;
+                        this._loadersContext = loadersContext;
                         this._currentPath = parentPath.GetPathWithNode(nameof(BaseUrl));
                     }
 
@@ -227,11 +220,11 @@ namespace EventsHandler.Configuration
             /// <summary>
             /// Initializes a new instance of the <see cref="UserComponent"/> class.
             /// </summary>
-            public UserComponent(IConfiguration configuration, ILoadingService loadingService, string parentName)
-                : base(configuration, loadingService, parentName)
+            public UserComponent(ILoadersContext loadersContext, string parentName)
+                : base(loadersContext, parentName)
             {
-                this.Domain = new DomainComponent(configuration, loadingService, parentName);
-                this.TemplateIds = new TemplateIdsComponent(configuration, loadingService, parentName);
+                this.Domain = new DomainComponent(loadersContext, parentName);
+                this.TemplateIds = new TemplateIdsComponent(loadersContext, parentName);
             }
 
             /// <summary>
@@ -242,18 +235,16 @@ namespace EventsHandler.Configuration
                 private static readonly ConcurrentDictionary<
                     string /* Config path */,
                     string /* Config value */> s_cachedDomainValues = new();
-
-                private readonly IConfiguration _configuration;
-                private readonly ILoadingService _loadingService;
+                
+                private readonly ILoadersContext _loadersContext;
                 private readonly string _currentPath;
 
                 /// <summary>
                 /// Initializes a new instance of the <see cref="DomainComponent"/> class.
                 /// </summary>
-                internal DomainComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                internal DomainComponent(ILoadersContext loadersContext, string parentPath)
                 {
-                    this._configuration = configuration;
-                    this._loadingService = loadingService;
+                    this._loadersContext = loadersContext;
                     this._currentPath = parentPath.GetPathWithNode(nameof(Domain));
                 }
 
@@ -292,12 +283,12 @@ namespace EventsHandler.Configuration
                 /// <summary>
                 /// Initializes a new instance of the <see cref="TemplateIdsComponent"/> class.
                 /// </summary>
-                internal TemplateIdsComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                internal TemplateIdsComponent(ILoadersContext loadersContext, string parentPath)
                 {
                     string currentPath = parentPath.GetPathWithNode(nameof(TemplateIds));
 
-                    this.Sms = new SmsComponent(configuration, loadingService, currentPath);
-                    this.Email = new EmailComponent(configuration, loadingService, currentPath);
+                    this.Sms = new SmsComponent(loadersContext, currentPath);
+                    this.Email = new EmailComponent(loadersContext, currentPath);
                 }
 
                 /// <summary>
@@ -308,18 +299,16 @@ namespace EventsHandler.Configuration
                     private static readonly ConcurrentDictionary<
                         string /* Config path */,
                         string /* Config value */> s_cachedSmsTemplateValues = new();
-
-                    private readonly IConfiguration _configuration;
-                    private readonly ILoadingService _loadingService;
+                    
+                    private readonly ILoadersContext _loadersContext;
                     private readonly string _currentPath;
 
                     /// <summary>
                     /// Initializes a new instance of the <see cref="SmsComponent"/> class.
                     /// </summary>
-                    internal SmsComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                    internal SmsComponent(ILoadersContext loadersContext, string parentPath)
                     {
-                        this._configuration = configuration;
-                        this._loadingService = loadingService;
+                        this._loadersContext = loadersContext;
                         this._currentPath = parentPath.GetPathWithNode(nameof(Sms));
                     }
 
@@ -345,31 +334,29 @@ namespace EventsHandler.Configuration
                         string /* Config path */,
                         string /* Config value */> s_cachedEmailTemplateValues = new();
 
-                    private readonly IConfiguration _configuration;
-                    private readonly ILoadingService _loadingService;
+                    private readonly ILoadersContext _loadersContext;
                     private readonly string _currentPath;
 
                     /// <summary>
                     /// Initializes a new instance of the <see cref="EmailComponent"/> class.
                     /// </summary>
-                    internal EmailComponent(IConfiguration configuration, ILoadingService loadingService, string parentPath)
+                    internal EmailComponent(ILoadersContext loadersContext, string parentPath)
                     {
-                        this._configuration = configuration;
-                        this._loadingService = loadingService;
+                        this._loadersContext = loadersContext;
                         this._currentPath = parentPath.GetPathWithNode(nameof(Email));
                     }
 
                     /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
                     internal string ZaakCreate() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_EMAIL_ZAAKCREATE");
-                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._configuration, this._currentPath, nameof(ZaakCreate));
+                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._loadersContext, this._currentPath, nameof(ZaakCreate));
 
                     /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
                     internal string ZaakUpdate() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_EMAIL_ZAAKUPDATE");
-                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._configuration, this._currentPath, nameof(ZaakUpdate));
+                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._loadersContext, this._currentPath, nameof(ZaakUpdate));
 
                     /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
                     internal string ZaakClose() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_EMAIL_ZAAKCLOSE");
-                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._configuration, this._currentPath, nameof(ZaakClose));
+                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._loadersContext, this._currentPath, nameof(ZaakClose));
                 }
             }
         }
