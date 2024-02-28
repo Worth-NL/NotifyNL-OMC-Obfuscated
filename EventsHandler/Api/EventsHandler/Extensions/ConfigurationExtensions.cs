@@ -122,5 +122,8 @@ namespace EventsHandler.Extensions
         
         internal static T GetConfigValueFromPathWithNode<T>(this IConfiguration configuration, string currentPath, string nodeName)
             => configuration.GetConfigValue<T>(GetPathWithNode(currentPath, nodeName));
+
+        private static string GetPathWithNode(string currentPath, string nodeName) => "";
+        private static string GetNodePath(string nodeName) => "";
     }
 }

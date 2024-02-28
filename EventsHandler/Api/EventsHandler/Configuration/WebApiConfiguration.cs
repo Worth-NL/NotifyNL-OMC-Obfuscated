@@ -1,10 +1,7 @@
 ﻿// © 2023, Worth Systems.
 
-using EventsHandler.Extensions;
 using EventsHandler.Services.DataLoading.Strategy.Interfaces;
 using System.Collections.Concurrent;
-using EventsHandler.Services.DataLoading.Enums;
-using ConfigurationExtensions = EventsHandler.Extensions.ConfigurationExtensions;
 
 namespace EventsHandler.Configuration
 {
@@ -90,7 +87,7 @@ namespace EventsHandler.Configuration
                 /// </summary>
                 internal AuthorizationComponent(ILoadersContext loadersContext, string parentPath)
                 {
-                    string currentPath = parentPath.GetPathWithNode(nameof(Authorization));
+                    string currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Authorization));
 
                     this.JWT = new JwtComponent(loadersContext, currentPath);
                     this.Key = new KeyComponent(loadersContext, currentPath);
@@ -110,7 +107,7 @@ namespace EventsHandler.Configuration
                     internal JwtComponent(ILoadersContext loadersContext, string parentPath)
                     {
                         this._loadersContext = loadersContext;
-                        this._currentPath = parentPath.GetPathWithNode(nameof(JWT));
+                        this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(JWT));
                     }
 
                     /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
@@ -152,7 +149,7 @@ namespace EventsHandler.Configuration
                     internal KeyComponent(ILoadersContext loadersContext, string parentPath)
                     {
                         this._loadersContext = loadersContext;
-                        this._currentPath = parentPath.GetPathWithNode(nameof(Key));
+                        this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Key));
                     }
 
                     /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
@@ -178,7 +175,7 @@ namespace EventsHandler.Configuration
                 /// </summary>
                 internal ApiComponent(ILoadersContext loadersContext, string parentPath)
                 {
-                    string currentPath = parentPath.GetPathWithNode(nameof(API));
+                    string currentPath = loadersContext.GetPathWithNode(parentPath, nameof(API));
 
                     this.BaseUrl = new BaseUrlComponent(loadersContext, currentPath);
                 }
@@ -197,7 +194,7 @@ namespace EventsHandler.Configuration
                     internal BaseUrlComponent(ILoadersContext loadersContext, string parentPath)
                     {
                         this._loadersContext = loadersContext;
-                        this._currentPath = parentPath.GetPathWithNode(nameof(BaseUrl));
+                        this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(BaseUrl));
                     }
 
                     /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
@@ -246,7 +243,7 @@ namespace EventsHandler.Configuration
                 internal DomainComponent(ILoadersContext loadersContext, string parentPath)
                 {
                     this._loadersContext = loadersContext;
-                    this._currentPath = parentPath.GetPathWithNode(nameof(Domain));
+                    this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Domain));
                 }
 
                 /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
@@ -286,7 +283,7 @@ namespace EventsHandler.Configuration
                 /// </summary>
                 internal TemplateIdsComponent(ILoadersContext loadersContext, string parentPath)
                 {
-                    string currentPath = parentPath.GetPathWithNode(nameof(TemplateIds));
+                    string currentPath = loadersContext.GetPathWithNode(parentPath, nameof(TemplateIds));
 
                     this.Sms = new SmsComponent(loadersContext, currentPath);
                     this.Email = new EmailComponent(loadersContext, currentPath);
@@ -310,7 +307,7 @@ namespace EventsHandler.Configuration
                     internal SmsComponent(ILoadersContext loadersContext, string parentPath)
                     {
                         this._loadersContext = loadersContext;
-                        this._currentPath = parentPath.GetPathWithNode(nameof(Sms));
+                        this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Sms));
                     }
 
                     /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
@@ -344,7 +341,7 @@ namespace EventsHandler.Configuration
                     internal EmailComponent(ILoadersContext loadersContext, string parentPath)
                     {
                         this._loadersContext = loadersContext;
-                        this._currentPath = parentPath.GetPathWithNode(nameof(Email));
+                        this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Email));
                     }
 
                     /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
@@ -363,61 +360,61 @@ namespace EventsHandler.Configuration
         }
 
         #region Helper methods
-        /// <summary>
-        /// Retrieves cached configuration value.
-        /// </summary>
-        private static string GetCachedValue(
-            ConcurrentDictionary<string, string> cachedValues,
-            IConfiguration configuration,
-            string currentPath,
-            string nodeName)
-        {
-            return cachedValues.GetOrAdd(
-                nodeName,
-                GetCachedValue<string>(configuration, currentPath, nodeName));
-        }
+        ///// <summary>
+        ///// Retrieves cached configuration value.
+        ///// </summary>
+        //private static string GetCachedValue(
+        //    ConcurrentDictionary<string, string> cachedValues,
+        //    IConfiguration configuration,
+        //    string currentPath,
+        //    string nodeName)
+        //{
+        //    return cachedValues.GetOrAdd(
+        //        nodeName,
+        //        GetCachedValue<string>(configuration, currentPath, nodeName));
+        //}
 
-        /// <inheritdoc cref="GetCachedValue(ConcurrentDictionary{string,string}, IConfiguration, string, string)"/>
-        private static T GetCachedValue<T>(
-            IConfiguration configuration,
-            string currentPath,
-            string nodeName)
-        {
-            return configuration.GetConfigValueFromPathWithNode<T>(currentPath, nodeName);
-        }
+        ///// <inheritdoc cref="GetCachedValue(ConcurrentDictionary{string,string}, IConfiguration, string, string)"/>
+        //private static T GetCachedValue<T>(
+        //    IConfiguration configuration,
+        //    string currentPath,
+        //    string nodeName)
+        //{
+        //    return configuration.GetConfigValueFromPathWithNode<T>(currentPath, nodeName);
+        //}
 
-        /// <summary>
-        /// Retrieves cached configuration value, ensuring it will be a domain (without http/s and API endpoint).
-        /// </summary>
-        private static string GetCachedDomainValue(
-            ConcurrentDictionary<string, string> cachedValues,
-            IConfiguration configuration,
-            string currentPath,
-            string nodeName)
-        {
-            return cachedValues.GetOrAdd(
-                nodeName,
-                configuration.GetConfigValueFromPathWithNode(currentPath, nodeName))
-                // NOTE: Validate only once when the value is cached
-                .WithoutHttp()
-                .WithoutEndpoint();
-        }
+        ///// <summary>
+        ///// Retrieves cached configuration value, ensuring it will be a domain (without http/s and API endpoint).
+        ///// </summary>
+        //private static string GetCachedDomainValue(
+        //    ConcurrentDictionary<string, string> cachedValues,
+        //    IConfiguration configuration,
+        //    string currentPath,
+        //    string nodeName)
+        //{
+        //    return cachedValues.GetOrAdd(
+        //        nodeName,
+        //        configuration.GetConfigValueFromPathWithNode(currentPath, nodeName))
+        //        // NOTE: Validate only once when the value is cached
+        //        .WithoutHttp()
+        //        .WithoutEndpoint();
+        //}
 
-        /// <summary>
-        /// Retrieves cached configuration value, ensuring it will be a valid Template Id.
-        /// </summary>
-        private static string GetCachedTemplateIdValue(
-            ConcurrentDictionary<string, string> cachedValues,
-            IConfiguration configuration,
-            string currentPath,
-            string nodeName)
-        {
-            return cachedValues.GetOrAdd(
-                nodeName,
-                configuration.GetConfigValueFromPathWithNode(currentPath, nodeName))
-                // NOTE: Validate only once when the value is cached
-                .ValidTemplateId();
-        }
+        ///// <summary>
+        ///// Retrieves cached configuration value, ensuring it will be a valid Template Id.
+        ///// </summary>
+        //private static string GetCachedTemplateIdValue(
+        //    ConcurrentDictionary<string, string> cachedValues,
+        //    IConfiguration configuration,
+        //    string currentPath,
+        //    string nodeName)
+        //{
+        //    return cachedValues.GetOrAdd(
+        //        nodeName,
+        //        configuration.GetConfigValueFromPathWithNode(currentPath, nodeName))
+        //        // NOTE: Validate only once when the value is cached
+        //        .ValidTemplateId();
+        //}
         #endregion
     }
 }

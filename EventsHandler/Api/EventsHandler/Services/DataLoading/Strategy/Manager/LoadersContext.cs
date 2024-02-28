@@ -8,7 +8,7 @@ using EventsHandler.Services.DataLoading.Strategy.Interfaces;
 namespace EventsHandler.Services.DataLoading.Strategy.Manager
 {
     /// <inheritdoc cref="ILoadersContext"/>
-    public sealed class LoadersContext : ILoadersContext, ILoadingService
+    internal sealed class LoadersContext : ILoadersContext
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -47,6 +47,14 @@ namespace EventsHandler.Services.DataLoading.Strategy.Manager
 
             return this._loadingService!.GetData<TData>(key);
         }
+        
+        /// <inheritdoc cref="ILoadingService.GetPathWithNode(string, string)"/>
+        string ILoadingService.GetPathWithNode(string currentPath, string nodeName)
+        {
+            ValidateContext();
+
+            return this._loadingService!.GetPathWithNode(currentPath, nodeName);
+        }
 
         private void ValidateContext()
         {
@@ -54,6 +62,14 @@ namespace EventsHandler.Services.DataLoading.Strategy.Manager
             {
                 throw new NotImplementedException(Resources.Processing_ERROR_Loader_NotImplemented);
             }
+        }
+        #endregion
+
+        #region IDisposable
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        void IDisposable.Dispose()
+        {
+            this._loadingService = null;
         }
         #endregion
     }

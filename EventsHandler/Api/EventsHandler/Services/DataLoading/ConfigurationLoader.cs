@@ -20,6 +20,7 @@ namespace EventsHandler.Services.DataLoading
             this._configuration = configuration;
         }
 
+        #region Polymorphism
         /// <inheritdoc cref="ILoadingService.GetData{T}(string)"/>
         /// <exception cref="ArgumentException"/>
         protected override TData GetData<TData>(string key)
@@ -33,6 +34,14 @@ namespace EventsHandler.Services.DataLoading
             return this._configuration.GetConfigValue<TData>(key);
         }
 
+        /// <inheritdoc cref="BaseLoader.GetPathWithNode(string, string)"/>
+        protected override string GetPathWithNode(string currentPath, string nodeName)
+        {
+            return $"{currentPath}{(string.IsNullOrWhiteSpace(nodeName)
+                ? string.Empty
+                : GetNodePath(nodeName))}";
+        }
+
         /// <inheritdoc cref="BaseLoader.GetNodePath(string)"/>
         protected override string GetNodePath(string nodeName)
         {
@@ -40,5 +49,6 @@ namespace EventsHandler.Services.DataLoading
 
             return $"{separator}{nodeName}";
         }
+        #endregion
     }
 }

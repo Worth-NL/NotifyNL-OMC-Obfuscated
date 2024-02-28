@@ -5,7 +5,7 @@ namespace EventsHandler.Services.DataLoading.Enums
     /// <summary>
     /// The types of DAO (Data Access Object) data providers.
     /// </summary>
-    internal enum LoaderTypes
+    public enum LoaderTypes
     {
         /// <summary>
         /// The configuration JSON loader.
