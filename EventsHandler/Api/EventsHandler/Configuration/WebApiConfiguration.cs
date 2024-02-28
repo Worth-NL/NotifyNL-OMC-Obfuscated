@@ -1,5 +1,7 @@
 ﻿// © 2023, Worth Systems.
 
+using EventsHandler.Extensions;
+using EventsHandler.Services.DataLoading.Interfaces;
 using EventsHandler.Services.DataLoading.Strategy.Interfaces;
 using System.Collections.Concurrent;
 
@@ -110,29 +112,29 @@ namespace EventsHandler.Configuration
                         this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(JWT));
                     }
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string Secret() => Environment.GetEnvironmentVariable("NOTIFY_AUTHORIZATION_JWT_SECRET");
-                        //=> GetCachedValue(s_cachedValues, this._configuration, this._currentPath, nameof(Secret));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string Secret()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(Secret));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string Issuer() => Environment.GetEnvironmentVariable("NOTIFY_AUTHORIZATION_JWT_ISSUER");
-                        //=> GetCachedValue(s_cachedValues, this._configuration, this._currentPath, nameof(Issuer));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string Issuer()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(Issuer));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string Audience() => Environment.GetEnvironmentVariable("NOTIFY_AUTHORIZATION_JWT_AUDIENCE");
-                        //=> GetCachedValue(s_cachedValues, this._configuration, this._currentPath, nameof(Audience));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string Audience()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(Audience));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal ushort ExpiresInMin() => ushort.Parse(Environment.GetEnvironmentVariable("NOTIFY_AUTHORIZATION_JWT_EXPIRESINMIN"));
-                        //=> GetCachedValue<ushort>(this._configuration, this._currentPath, nameof(ExpiresInMin));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal ushort ExpiresInMin()
+                        => GetCachedValue<ushort>(this._loadersContext, this._currentPath, nameof(ExpiresInMin));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string UserId() => Environment.GetEnvironmentVariable("NOTIFY_AUTHORIZATION_JWT_USERID");
-                        //=> GetCachedValue(s_cachedValues, this._configuration, this._currentPath, nameof(UserId));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string UserId()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(UserId));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string UserName() => Environment.GetEnvironmentVariable("NOTIFY_AUTHORIZATION_JWT_USERNAME");
-                        //=> GetCachedValue(s_cachedValues, this._configuration, this._currentPath, nameof(UserName));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string UserName()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(UserName));
                 }
 
                 /// <summary>
@@ -152,13 +154,13 @@ namespace EventsHandler.Configuration
                         this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Key));
                     }
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string NotifyNL() => Environment.GetEnvironmentVariable("USER_AUTHORIZATION_KEY_NOTIFYNL");
-                        //=> GetCachedValue(s_cachedValues, this._configuration, this._currentPath, nameof(NotifyNL));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string NotifyNL()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(NotifyNL));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string Objecten() => Environment.GetEnvironmentVariable("USER_AUTHORIZATION_KEY_OBJECTEN");
-                        //=> GetCachedValue(s_cachedValues, this._configuration, this._currentPath, nameof(NotifyNL));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string Objecten()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(NotifyNL));
                 }
             }
 
@@ -197,9 +199,9 @@ namespace EventsHandler.Configuration
                         this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(BaseUrl));
                     }
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string NotifyNL() => Environment.GetEnvironmentVariable("NOTIFY_API_BASEURL_NOTIFYNL");
-                        //=> GetCachedValue(s_cachedValues, this._configuration, this._currentPath, nameof(NotifyNL));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string NotifyNL()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(NotifyNL));
                 }
             }
         }
@@ -246,25 +248,25 @@ namespace EventsHandler.Configuration
                     this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Domain));
                 }
 
-                /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                internal string OpenNotificaties() => Environment.GetEnvironmentVariable("USER_DOMAIN_OPENNOTIFICATIES");
-                    //=> GetCachedDomainValue(s_cachedDomainValues, this._configuration, this._currentPath, nameof(OpenNotificaties));
+                /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                internal string OpenNotificaties()
+                    => GetCachedDomainValue(this._loadersContext, s_cachedDomainValues, this._currentPath, nameof(OpenNotificaties));
+                
+                /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                internal string OpenZaak()
+                    => GetCachedDomainValue(this._loadersContext, s_cachedDomainValues, this._currentPath, nameof(OpenZaak));
+                    
+                /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                internal string OpenKlant()
+                    => GetCachedDomainValue(this._loadersContext, s_cachedDomainValues, this._currentPath, nameof(OpenKlant));
 
-                /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                internal string OpenZaak() => Environment.GetEnvironmentVariable("USER_DOMAIN_OPENZAAK");
-                    //=> GetCachedDomainValue(s_cachedDomainValues, this._configuration, this._currentPath, nameof(OpenZaak));
+                /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                internal string Objecten()
+                    => GetCachedDomainValue(this._loadersContext, s_cachedDomainValues, this._currentPath, nameof(Objecten));
 
-                /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                internal string OpenKlant() => Environment.GetEnvironmentVariable("USER_DOMAIN_OPENKLANT");
-                    //=> GetCachedDomainValue(s_cachedDomainValues, this._configuration, this._currentPath, nameof(OpenKlant));
-
-                /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                internal string Objecten() => Environment.GetEnvironmentVariable("USER_DOMAIN_OBJECTEN");
-                    //=> GetCachedDomainValue(s_cachedDomainValues, this._configuration, this._currentPath, nameof(Objecten));
-
-                /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                internal string ObjectTypen() => Environment.GetEnvironmentVariable("USER_DOMAIN_OBJECTTYPEN");
-                    //=> GetCachedDomainValue(s_cachedDomainValues, this._configuration, this._currentPath, nameof(ObjectTypen));
+                /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                internal string ObjectTypen()
+                    => GetCachedDomainValue(this._loadersContext, s_cachedDomainValues, this._currentPath, nameof(ObjectTypen));
             }
 
             /// <summary>
@@ -310,17 +312,17 @@ namespace EventsHandler.Configuration
                         this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Sms));
                     }
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string ZaakCreate() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_SMS_ZAAKCREATE");
-                        //=> GetCachedTemplateIdValue(s_cachedSmsTemplateValues, this._configuration, this._currentPath, nameof(ZaakCreate));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string ZaakCreate()
+                        => GetCachedTemplateIdValue(this._loadersContext, s_cachedSmsTemplateValues, this._currentPath, nameof(ZaakCreate));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string ZaakUpdate() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_SMS_ZAAKUPDATE");
-                        //=> GetCachedTemplateIdValue(s_cachedSmsTemplateValues, this._configuration, this._currentPath, nameof(ZaakUpdate));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string ZaakUpdate()
+                        => GetCachedTemplateIdValue(this._loadersContext, s_cachedSmsTemplateValues, this._currentPath, nameof(ZaakUpdate));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string ZaakClose() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_SMS_ZAAKCLOSE");
-                        //=> GetCachedTemplateIdValue(s_cachedSmsTemplateValues, this._configuration, this._currentPath, nameof(ZaakClose));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string ZaakClose()
+                        => GetCachedTemplateIdValue(this._loadersContext, s_cachedSmsTemplateValues, this._currentPath, nameof(ZaakClose));
                 }
 
                 /// <summary>
@@ -344,77 +346,83 @@ namespace EventsHandler.Configuration
                         this._currentPath = loadersContext.GetPathWithNode(parentPath, nameof(Email));
                     }
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string ZaakCreate() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_EMAIL_ZAAKCREATE");
-                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._loadersContext, this._currentPath, nameof(ZaakCreate));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string ZaakCreate()
+                        => GetCachedTemplateIdValue(this._loadersContext, s_cachedEmailTemplateValues, this._currentPath, nameof(ZaakCreate));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string ZaakUpdate() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_EMAIL_ZAAKUPDATE");
-                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._loadersContext, this._currentPath, nameof(ZaakUpdate));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string ZaakUpdate()
+                        => GetCachedTemplateIdValue(this._loadersContext, s_cachedEmailTemplateValues, this._currentPath, nameof(ZaakUpdate));
 
-                    /// <inheritdoc cref="ConfigurationExtensions.GetConfigValue(IConfiguration, string)"/>
-                    internal string ZaakClose() => Environment.GetEnvironmentVariable("USER_TEMPLATEIDS_EMAIL_ZAAKCLOSE");
-                        //=> GetCachedTemplateIdValue(s_cachedEmailTemplateValues, this._loadersContext, this._currentPath, nameof(ZaakClose));
+                    /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
+                    internal string ZaakClose()
+                        => GetCachedTemplateIdValue(this._loadersContext, s_cachedEmailTemplateValues, this._currentPath, nameof(ZaakClose));
                 }
             }
         }
 
         #region Helper methods
-        ///// <summary>
-        ///// Retrieves cached configuration value.
-        ///// </summary>
-        //private static string GetCachedValue(
-        //    ConcurrentDictionary<string, string> cachedValues,
-        //    IConfiguration configuration,
-        //    string currentPath,
-        //    string nodeName)
-        //{
-        //    return cachedValues.GetOrAdd(
-        //        nodeName,
-        //        GetCachedValue<string>(configuration, currentPath, nodeName));
-        //}
+        /// <summary>
+        /// Retrieves cached configuration value.
+        /// </summary>
+        private static string GetCachedValue(
+            ILoadingService loadersContext,
+            ConcurrentDictionary<string, string> cachedValues,
+            string currentPath,
+            string nodeName)
+        {
+            string finalPath = loadersContext.GetPathWithNode(currentPath, nodeName);
 
-        ///// <inheritdoc cref="GetCachedValue(ConcurrentDictionary{string,string}, IConfiguration, string, string)"/>
-        //private static T GetCachedValue<T>(
-        //    IConfiguration configuration,
-        //    string currentPath,
-        //    string nodeName)
-        //{
-        //    return configuration.GetConfigValueFromPathWithNode<T>(currentPath, nodeName);
-        //}
+            return cachedValues.GetOrAdd(
+                nodeName,
+                loadersContext.GetData<string>(finalPath));
+        }
 
-        ///// <summary>
-        ///// Retrieves cached configuration value, ensuring it will be a domain (without http/s and API endpoint).
-        ///// </summary>
-        //private static string GetCachedDomainValue(
-        //    ConcurrentDictionary<string, string> cachedValues,
-        //    IConfiguration configuration,
-        //    string currentPath,
-        //    string nodeName)
-        //{
-        //    return cachedValues.GetOrAdd(
-        //        nodeName,
-        //        configuration.GetConfigValueFromPathWithNode(currentPath, nodeName))
-        //        // NOTE: Validate only once when the value is cached
-        //        .WithoutHttp()
-        //        .WithoutEndpoint();
-        //}
+        /// <summary>
+        /// Retrieves cached configuration value.
+        /// </summary>
+        private static TData GetCachedValue<TData>(
+            ILoadingService loadersContext,
+            string currentPath,
+            string nodeName)
+        {
+            string finalPath = loadersContext.GetPathWithNode(currentPath, nodeName);
 
-        ///// <summary>
-        ///// Retrieves cached configuration value, ensuring it will be a valid Template Id.
-        ///// </summary>
-        //private static string GetCachedTemplateIdValue(
-        //    ConcurrentDictionary<string, string> cachedValues,
-        //    IConfiguration configuration,
-        //    string currentPath,
-        //    string nodeName)
-        //{
-        //    return cachedValues.GetOrAdd(
-        //        nodeName,
-        //        configuration.GetConfigValueFromPathWithNode(currentPath, nodeName))
-        //        // NOTE: Validate only once when the value is cached
-        //        .ValidTemplateId();
-        //}
+            return loadersContext.GetData<TData>(finalPath);
+        }
+
+        /// <summary>
+        /// Retrieves cached configuration value, ensuring it will be a domain (without http/s and API endpoint).
+        /// </summary>
+        private static string GetCachedDomainValue(
+            ILoadingService loadersContext,
+            ConcurrentDictionary<string, string> cachedValues,
+            string currentPath,
+            string nodeName)
+        {
+            return cachedValues.GetOrAdd(
+                nodeName,
+                GetCachedValue(loadersContext, cachedValues, currentPath, nodeName)
+                // NOTE: Validate only once when the value is cached
+                .WithoutHttp()
+                .WithoutEndpoint());
+        }
+
+        /// <summary>
+        /// Retrieves cached configuration value, ensuring it will be a valid Template Id.
+        /// </summary>
+        private static string GetCachedTemplateIdValue(
+            ILoadingService loadersContext,
+            ConcurrentDictionary<string, string> cachedValues,
+            string currentPath,
+            string nodeName)
+        {
+            return cachedValues.GetOrAdd(
+                nodeName,
+                GetCachedValue(loadersContext, cachedValues, currentPath, nodeName)
+                // NOTE: Validate only once when the value is cached
+                .ValidTemplateId());
+        }
         #endregion
     }
 }
