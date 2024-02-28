@@ -13,7 +13,7 @@ namespace EventsHandler.Services.DataLoading.Strategy.Interfaces
     ///   i.e., from Azure Key Vault, Environment Variables, or any other type of data carrier.
     /// </para>
     /// </summary>
-    public interface ILoadersContext : ILoadingService, IDisposable
+    public interface ILoadersContext : ILoadingService
     {
         /// <summary>
         /// Sets the specific DAO (Data Access Object) data provider / aka. "Loader".

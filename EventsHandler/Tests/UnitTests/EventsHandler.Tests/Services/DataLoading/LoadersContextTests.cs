@@ -22,21 +22,10 @@ namespace EventsHandler.UnitTests.Services.DataLoading
             serviceCollection.AddSingleton(new ConfigurationLoader(ConfigurationHandler.GetConfiguration()));
             serviceCollection.AddSingleton(new EnvironmentLoader());
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+            EnvironmentLoader environmentLoader = new();
 
             // Loaders context
-            this._loadersContext = new LoadersContext(serviceProvider);
-        }
-
-        [TearDown]
-        public void ResetTests()
-        {
-            this._loadersContext?.Dispose();
-        }
-        
-        [OneTimeTearDown]
-        public void CleanupTests()
-        {
-            ResetTests();
+            this._loadersContext = new LoadersContext(serviceProvider, environmentLoader);
         }
         
         #region SetLoader
@@ -50,26 +39,11 @@ namespace EventsHandler.UnitTests.Services.DataLoading
             Assert.Throws<NotImplementedException>(() => this._loadersContext!.SetLoader(invalidType));
         }
         #endregion
-
+        
         #region GetData
-        [Test]
-        public void GetData_WithoutLoadingService_ThrowsNotImplementedException()
-        {
-            // Act & Assert
-            Assert.Throws<NotImplementedException>(() =>
-                this._loadersContext!.GetData<string>(string.Empty));
-        }
         #endregion
 
         #region GetPathWithNode
-        [Test]
-        public void GetPathWithNode_WithoutLoadingService_ThrowsNotImplementedException()
-        {
-            // Act & Assert
-            Assert.Throws<NotImplementedException>(() =>
-                this._loadersContext!.GetPathWithNode(string.Empty, string.Empty));
-        }
-        
         // IConfiguration
         [TestCase(LoaderTypes.Configuration, "", "", "")]
         [TestCase(LoaderTypes.Configuration, "abc", "", "abc")]

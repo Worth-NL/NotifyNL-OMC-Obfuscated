@@ -47,6 +47,7 @@ using SecretsManager.Services.Authentication.Encryptions.Strategy.Context;
 using SecretsManager.Services.Authentication.Encryptions.Strategy.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
+using EventsHandler.Services.DataLoading.Interfaces;
 
 namespace EventsHandler
 {
@@ -219,6 +220,9 @@ namespace EventsHandler
 
         private static void RegisterLoadingStrategies(this IServiceCollection services)
         {
+            // Default configuration loader strategy
+            services.AddSingleton<ILoadingService, EnvironmentLoader>();
+
             // Strategy Context (acting like loader strategy facade)
             services.AddSingleton<ILoadersContext, LoadersContext>();
 
