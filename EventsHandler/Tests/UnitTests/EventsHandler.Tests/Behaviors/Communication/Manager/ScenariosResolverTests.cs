@@ -21,7 +21,7 @@ namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
         private Mock<IDataQueryService<NotificationEvent>>? _mockedDataQuery;
 
         private ServiceProvider? _serviceProvider;
-        private IScenariosResolver? _scenariosManager;
+        private IScenariosResolver? _scenariosResolver;
 
         [OneTimeSetUp]
         public void InitializeTests()
@@ -44,7 +44,7 @@ namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
             this._serviceProvider = serviceCollection.BuildServiceProvider();
 
             // Scenarios Manager
-            this._scenariosManager = new ScenariosResolver(this._serviceProvider, this._mockedDataQuery.Object);
+            this._scenariosResolver = new ScenariosResolver(this._serviceProvider, this._mockedDataQuery.Object);
         }
 
         [SetUp]
@@ -56,6 +56,7 @@ namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
         [OneTimeTearDown]
         public void CleanupTests()
         {
+            // Dispose service provider with registered services
             this._serviceProvider?.Dispose();
         }
 
@@ -66,7 +67,7 @@ namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
             var testNotification = new NotificationEvent();
 
             // Act
-            INotifyScenario actualResult = await this._scenariosManager!.DetermineScenarioAsync(testNotification);
+            INotifyScenario actualResult = await this._scenariosResolver!.DetermineScenarioAsync(testNotification);
 
             // Assert
             Assert.That(actualResult, Is.TypeOf<NotImplementedScenario>());
@@ -83,7 +84,7 @@ namespace EventsHandler.UnitTests.Behaviors.Communication.Manager
             //    .Returns(new Mock<ApiDataQuery.QueryContext>());
 
             // Act
-            INotifyScenario actualResult = await this._scenariosManager!.DetermineScenarioAsync(testNotification);
+            INotifyScenario actualResult = await this._scenariosResolver!.DetermineScenarioAsync(testNotification);
         }
 
         #region Helper methods
