@@ -1,5 +1,6 @@
 ﻿// © 2023, Worth Systems.
 
+using EventsHandler.Services.DataLoading;
 using Microsoft.Extensions.Configuration;
 
 namespace EventsHandler.Utilities._TestHelpers
@@ -20,6 +21,14 @@ namespace EventsHandler.Utilities._TestHelpers
                 .Build();
 
             return configuration;
+        }
+
+        /// <summary>
+        /// Gets the test <see cref="ConfigurationLoader"/>.
+        /// </summary>
+        internal static ConfigurationLoader GetConfigurationLoader()
+        {
+            return new ConfigurationLoader(GetConfiguration());
         }
     }
 }
