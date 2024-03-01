@@ -8,6 +8,9 @@ using EventsHandler.Services.DataSending;
 using EventsHandler.Services.DataSending.Clients.Interfaces;
 using EventsHandler.Services.DataSending.Interfaces;
 using EventsHandler.Services.Telemetry.Interfaces;
+using Notify.Client;
+using Notify.Models;
+using Notify.Models.Responses;
 
 #pragma warning disable IDE0008 // Use explicit type
 
@@ -224,5 +227,43 @@ namespace EventsHandler.IntegrationTests.Services.DataSending
             Attributes = new EventAttributes { SourceOrganization = new string('0', 9) }
         };
         #endregion
+
+        // ----------
+        // LOCAL TEST
+        // ----------
+
+        [Test, Ignore("Sending real SMS and Emails")]
+        public void TestNotifyNL()
+        {
+            var notifyClient = new NotificationClient(
+                "https://api.sandbox.notifynl.nl/",
+                "omc-17b28b33-6c33-494a-9c41-bb69ee3c2c6d-d2dafcb0-5445-4b36-93e3-e9a81745ba9d");
+
+            // TEMPLATES
+            List<TemplateResponse> templates = notifyClient.GetAllTemplates().templates;
+
+            // Email template
+            TemplateResponse emailTemplate = templates.First(template => template.type == "email");
+
+            // SMS template
+            TemplateResponse smsTemplate = templates.First(template => template.type == "sms");
+
+            // Personalization
+            Dictionary<string, dynamic> personalization = new()
+            {
+                { "city",    "Rotterdam" },
+                { "address", "Coolsingel 40, 3011 AD Rotterdam" },
+                { "hour",    "14:00" }
+            };
+
+            // Sending email
+            EmailNotificationResponse emailResponse = notifyClient.SendEmail("evdwaard@worth.systems", emailTemplate.id, clientReference: "Email local test");
+
+            // Sending SMS
+            SmsNotificationResponse smsResponse = notifyClient.SendSms("+31618758539", smsTemplate.id, clientReference: "SMS local test");
+
+            // NOTIFICATIONS
+            NotificationList notifications = notifyClient.GetNotifications();
+        }
     }
 }
