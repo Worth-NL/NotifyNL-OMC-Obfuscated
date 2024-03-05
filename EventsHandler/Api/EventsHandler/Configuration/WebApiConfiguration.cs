@@ -160,7 +160,7 @@ namespace EventsHandler.Configuration
 
                     /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
                     internal string Objecten()
-                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(NotifyNL));
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(Objecten));
                 }
             }
 
@@ -200,8 +200,8 @@ namespace EventsHandler.Configuration
                     }
 
                     /// <inheritdoc cref="ILoadingService.GetData{TData}(string)"/>
-                    internal string NotifyNL()
-                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(NotifyNL));
+                    internal string Address()
+                        => GetCachedValue(this._loadersContext, s_cachedValues, this._currentPath, nameof(Address));
                 }
             }
         }

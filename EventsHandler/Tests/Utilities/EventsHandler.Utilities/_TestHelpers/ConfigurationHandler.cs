@@ -54,7 +54,7 @@ namespace EventsHandler.Utilities._TestHelpers
                 { "NOTIFY_AUTHORIZATION_JWT_USERID",   isValid ? testValue : string.Empty },
                 { "NOTIFY_AUTHORIZATION_JWT_USERNAME", isValid ? testValue : string.Empty },
                 
-                { "NOTIFY_API_BASEURL_NOTIFYNL",       isValid ? "https://www.test.nl/" : string.Empty },
+                { "NOTIFY_API_BASEURL_ADDRESS",       isValid ? "https://www.test.nl/" : string.Empty },
                 
                 { "USER_AUTHORIZATION_JWT_SECRET",     isValid ? testValue : string.Empty },
                 { "USER_AUTHORIZATION_JWT_ISSUER",     isValid ? testValue : string.Empty },
@@ -111,7 +111,7 @@ namespace EventsHandler.Utilities._TestHelpers
 
                 ("Notify",             "API",      "NOTIFY_API"),
                 ("NOTIFY_API",         "BaseUrl",  "NOTIFY_API_BASEURL"),
-                ("NOTIFY_API_BASEURL", "NotifyNL", "NOTIFY_API_BASEURL_NOTIFYNL"),
+                ("NOTIFY_API_BASEURL", "Address",  "NOTIFY_API_BASEURL_ADDRESS"),
 
                 ("USER_AUTHORIZATION",     "JWT",          "USER_AUTHORIZATION_JWT"),
                 ("USER_AUTHORIZATION_JWT", "Secret",       "USER_AUTHORIZATION_JWT_SECRET"),

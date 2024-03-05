@@ -32,7 +32,7 @@ namespace EventsHandler.UnitTests.Configuration
 
                 // API | BaseUrl
                 var apiBaseUrl = configuration.Notify.API.BaseUrl;
-                Assert.That(apiBaseUrl.NotifyNL(), Is.Not.Null.Or.Empty);
+                Assert.That(apiBaseUrl.Address(), Is.Not.Null.Or.Empty);
 
                 // Authorization | JWT | User
                 var userJwt = configuration.User.Authorization.JWT;
@@ -84,7 +84,7 @@ namespace EventsHandler.UnitTests.Configuration
                 ConfigurationHandler.GetEnvironmentLoader(isValid: false));
 
             // Invalid: Not existing
-            yield return ("#1", () => configuration.User.API.BaseUrl.NotifyNL(), Resources.Configuration_ERROR_ValueNotFoundOrEmpty);
+            yield return ("#1", () => configuration.User.API.BaseUrl.Address(), Resources.Configuration_ERROR_ValueNotFoundOrEmpty);
             // Invalid: Empty
             yield return ("#2", () => configuration.User.Authorization.JWT.Audience(), Resources.Configuration_ERROR_ValueNotFoundOrEmpty);
             // Invalid: https://domain
