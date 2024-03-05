@@ -31,7 +31,7 @@ namespace EventsHandler.Services.DataLoading
                 throw new KeyNotFoundException(Resources.Configuration_ERROR_ValueNotFoundOrEmpty);
             }
 
-            return this._configuration.GetConfigValue<TData>(key);
+            return this._configuration.GetValue<TData>(key).NotEmpty(key);
         }
 
         /// <inheritdoc cref="BaseLoader.GetPathWithNode(string, string)"/>

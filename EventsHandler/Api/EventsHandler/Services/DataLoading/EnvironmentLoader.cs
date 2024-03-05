@@ -1,5 +1,6 @@
 ﻿// © 2024, Worth Systems.
 
+using EventsHandler.Extensions;
 using EventsHandler.Properties;
 using EventsHandler.Services.DataLoading.Base;
 using EventsHandler.Services.DataLoading.Interfaces;
@@ -17,14 +18,14 @@ namespace EventsHandler.Services.DataLoading
             // The key is missing
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new KeyNotFoundException(Resources.Configuration_ERROR_EnvironmentVariableGetNull);
+                throw new KeyNotFoundException(Resources.Configuration_ERROR_EnvironmentVariableGetNull + key.Separated());
             }
 
             // Support for modern Windows OS (e.g., Windows XP, Vista, 7, 8+, 10, 11)
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 object value = Environment.GetEnvironmentVariable(key)
-                    ?? throw new KeyNotFoundException(Resources.Configuration_ERROR_EnvironmentVariableGetNull);
+                    ?? throw new KeyNotFoundException(Resources.Configuration_ERROR_EnvironmentVariableGetNull + key.Separated());
 
                 return (TData)Convert.ChangeType(value, typeof(TData));
             }

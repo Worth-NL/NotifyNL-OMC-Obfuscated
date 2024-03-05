@@ -236,8 +236,8 @@ namespace EventsHandler.IntegrationTests.Services.DataSending
         public void TestNotifyNL()
         {
             var notifyClient = new NotificationClient(
-                "https://api.sandbox.notifynl.nl/",
-                "omc-17b28b33-6c33-494a-9c41-bb69ee3c2c6d-d2dafcb0-5445-4b36-93e3-e9a81745ba9d");
+                "https://api.test.notifynl.nl",
+                "thomas_test-a6edc359-2dd5-4e4c-ab09-b9c9b66049b4-ca645f4a-2ab7-4d5c-8448-d0fc32d13198");
 
             // TEMPLATES
             List<TemplateResponse> templates = notifyClient.GetAllTemplates().templates;
@@ -246,21 +246,25 @@ namespace EventsHandler.IntegrationTests.Services.DataSending
             TemplateResponse emailTemplate = templates.First(template => template.type == "email");
 
             // SMS template
-            TemplateResponse smsTemplate = templates.First(template => template.type == "sms");
+            TemplateResponse smsTemplate = templates.Last(template => template.type == "sms");
 
             // Personalization
-            Dictionary<string, dynamic> personalization = new()
+            Dictionary<string, dynamic> personalisation = new()
             {
-                { "city",    "Rotterdam" },
-                { "address", "Coolsingel 40, 3011 AD Rotterdam" },
-                { "hour",    "14:00" }
+                { "name", "Test User" },
+                { "day of week", $"{DateTime.Now.DayOfWeek}" },
+                { "colour", "black"}
             };
 
             // Sending email
-            EmailNotificationResponse emailResponse = notifyClient.SendEmail("evdwaard@worth.systems", emailTemplate.id, clientReference: "Email local test");
+            EmailNotificationResponse emailResponse =
+                notifyClient.SendEmail(emailTemplate.created_by, emailTemplate.id, clientReference: "Email local test");
 
             // Sending SMS
-            SmsNotificationResponse smsResponse = notifyClient.SendSms("+31618758539", smsTemplate.id, clientReference: "SMS local test");
+            // Ernout: +31618758539
+            // Pier:   +31618691140
+            SmsNotificationResponse smsResponse =
+                notifyClient.SendSms("+31618691140", smsTemplate.id, clientReference: "SMS local test");
 
             // NOTIFICATIONS
             NotificationList notifications = notifyClient.GetNotifications();

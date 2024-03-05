@@ -48,6 +48,7 @@ using SecretsManager.Services.Authentication.Encryptions.Strategy.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 using EventsHandler.Services.DataLoading.Interfaces;
+using ConfigurationExtensions = EventsHandler.Extensions.ConfigurationExtensions;
 
 namespace EventsHandler
 {
@@ -106,9 +107,9 @@ namespace EventsHandler
                                 setup.TokenValidationParameters = new TokenValidationParameters
                                 {
                                     // Validation parameters
-                                    ValidIssuer = builder.Configuration.GetWorthJwtIssuer(),
-                                    ValidAudience = builder.Configuration.GetWorthJwtAudience(),
-                                    IssuerSigningKey = encryptionContext.GetSecurityKey(builder.Configuration.GetWorthJwtSecret()),
+                                    ValidIssuer = ConfigurationExtensions.GetWorthJwtIssuer(),
+                                    ValidAudience = ConfigurationExtensions.GetWorthJwtAudience(),
+                                    IssuerSigningKey = encryptionContext.GetSecurityKey(ConfigurationExtensions.GetWorthJwtSecret()),
 
                                     // Validation criteria
                                     ValidateIssuer = true,
