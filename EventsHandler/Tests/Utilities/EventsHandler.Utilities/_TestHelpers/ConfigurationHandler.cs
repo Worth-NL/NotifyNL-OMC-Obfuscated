@@ -48,19 +48,19 @@ namespace EventsHandler.Utilities._TestHelpers
             #region GetData<T>() mocking
             Dictionary<string /* Key */, string /* Value */> keyValueMapping = new()
             {
-                { "NOTIFY_AUTHORIZATION_JWT_SECRET",       isValid ? testValue : string.Empty },
-                { "NOTIFY_AUTHORIZATION_JWT_ISSUER",       isValid ? testValue : string.Empty },
-                { "NOTIFY_AUTHORIZATION_JWT_AUDIENCE",     isValid ? testValue : string.Empty },
-                { "NOTIFY_AUTHORIZATION_JWT_USERID",       isValid ? testValue : string.Empty },
-                { "NOTIFY_AUTHORIZATION_JWT_USERNAME",     isValid ? testValue : string.Empty },
+                { "NOTIFY_AUTHORIZATION_JWT_SECRET",   isValid ? testValue : string.Empty },
+                { "NOTIFY_AUTHORIZATION_JWT_ISSUER",   isValid ? testValue : string.Empty },
+                { "NOTIFY_AUTHORIZATION_JWT_AUDIENCE", isValid ? testValue : string.Empty },
+                { "NOTIFY_AUTHORIZATION_JWT_USERID",   isValid ? testValue : string.Empty },
+                { "NOTIFY_AUTHORIZATION_JWT_USERNAME", isValid ? testValue : string.Empty },
                 
-                { "NOTIFY_API_BASEURL_NOTIFYNL",         isValid ? "https://www.test.nl/" : string.Empty },
+                { "NOTIFY_API_BASEURL_NOTIFYNL",       isValid ? "https://www.test.nl/" : string.Empty },
                 
-                { "USER_AUTHORIZATION_JWT_SECRET",       isValid ? testValue : string.Empty },
-                { "USER_AUTHORIZATION_JWT_ISSUER",       isValid ? testValue : string.Empty },
-                { "USER_AUTHORIZATION_JWT_AUDIENCE",     isValid ? testValue : string.Empty },
-                { "USER_AUTHORIZATION_JWT_USERID",       isValid ? testValue : string.Empty },
-                { "USER_AUTHORIZATION_JWT_USERNAME",     isValid ? testValue : string.Empty },
+                { "USER_AUTHORIZATION_JWT_SECRET",     isValid ? testValue : string.Empty },
+                { "USER_AUTHORIZATION_JWT_ISSUER",     isValid ? testValue : string.Empty },
+                { "USER_AUTHORIZATION_JWT_AUDIENCE",   isValid ? testValue : string.Empty },
+                { "USER_AUTHORIZATION_JWT_USERID",     isValid ? testValue : string.Empty },
+                { "USER_AUTHORIZATION_JWT_USERNAME",   isValid ? testValue : string.Empty },
 
                 { "USER_AUTHORIZATION_KEY_NOTIFYNL",   isValid ? testValue : string.Empty },
                 { "USER_AUTHORIZATION_KEY_OBJECTEN",   isValid ? testValue : string.Empty },
