@@ -76,7 +76,7 @@ namespace EventsHandler.Utilities._TestHelpers
                 { "USER_TEMPLATEIDS_SMS_ZAAKCLOSE",    isValid ? testTempId : string.Empty },
                 { "USER_TEMPLATEIDS_EMAIL_ZAAKCREATE", isValid ? testTempId : string.Empty },
                 { "USER_TEMPLATEIDS_EMAIL_ZAAKUPDATE", isValid ? testTempId : string.Empty },
-                { "USER_TEMPLATEIDS_EMAIL_ZAAKCLOSE",  isValid ? testTempId : string.Empty },
+                { "USER_TEMPLATEIDS_EMAIL_ZAAKCLOSE",  isValid ? testTempId : string.Empty }
             };
 
             foreach (KeyValuePair<string, string> keyValue in keyValueMapping)
