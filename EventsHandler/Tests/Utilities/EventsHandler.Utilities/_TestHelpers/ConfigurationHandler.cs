@@ -109,8 +109,8 @@ namespace EventsHandler.Utilities._TestHelpers
                 ("NOTIFY_AUTHORIZATION_JWT", "UserId",       "NOTIFY_AUTHORIZATION_JWT_USERID"),
                 ("NOTIFY_AUTHORIZATION_JWT", "UserName",     "NOTIFY_AUTHORIZATION_JWT_USERNAME"),
 
-                ("Notify",     "API",      "NOTIFY_API"),
-                ("NOTIFY_API", "BaseUrl",  "NOTIFY_API_BASEURL"),
+                ("Notify",     "API",     "NOTIFY_API"),
+                ("NOTIFY_API", "BaseUrl", "NOTIFY_API_BASEURL"),
 
                 ("USER_AUTHORIZATION",     "JWT",          "USER_AUTHORIZATION_JWT"),
                 ("USER_AUTHORIZATION_JWT", "Secret",       "USER_AUTHORIZATION_JWT_SECRET"),
@@ -138,10 +138,10 @@ namespace EventsHandler.Utilities._TestHelpers
                 ("USER_TEMPLATEIDS_SMS",   "ZaakUpdate",  "USER_TEMPLATEIDS_SMS_ZAAKUPDATE"),
                 ("USER_TEMPLATEIDS_SMS",   "ZaakClose",   "USER_TEMPLATEIDS_SMS_ZAAKCLOSE"),
 
-                ("USER_TEMPLATEIDS",       "Email",       "USER_TEMPLATEIDS_EMAIL"),
-                ("USER_TEMPLATEIDS_EMAIL", "ZaakCreate",  "USER_TEMPLATEIDS_EMAIL_ZAAKCREATE"),
-                ("USER_TEMPLATEIDS_EMAIL", "ZaakUpdate",  "USER_TEMPLATEIDS_EMAIL_ZAAKUPDATE"),
-                ("USER_TEMPLATEIDS_EMAIL", "ZaakClose",   "USER_TEMPLATEIDS_EMAIL_ZAAKCLOSE"),
+                ("USER_TEMPLATEIDS",       "Email",      "USER_TEMPLATEIDS_EMAIL"),
+                ("USER_TEMPLATEIDS_EMAIL", "ZaakCreate", "USER_TEMPLATEIDS_EMAIL_ZAAKCREATE"),
+                ("USER_TEMPLATEIDS_EMAIL", "ZaakUpdate", "USER_TEMPLATEIDS_EMAIL_ZAAKUPDATE"),
+                ("USER_TEMPLATEIDS_EMAIL", "ZaakClose",  "USER_TEMPLATEIDS_EMAIL_ZAAKCLOSE"),
             };
 
             foreach ((string Path, string Node, string ResultPath) data in testData)
