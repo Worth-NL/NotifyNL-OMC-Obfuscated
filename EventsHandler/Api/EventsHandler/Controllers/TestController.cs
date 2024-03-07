@@ -80,6 +80,7 @@ namespace EventsHandler.Controllers
         [SwaggerRequestExample(typeof(Dictionary<string, object>), typeof(PersonalizationExample))]
         [ProducesResponseType(StatusCodes.Status202Accepted)]                                                         // REASON: The notification successfully sent to NotifyNL API service
         [ProducesResponseType(StatusCodes.Status401Unauthorized,        Type = typeof(string))]                       // REASON: JWT Token is invalid or expired
+        [ProducesResponseType(StatusCodes.Status403Forbidden,           Type = typeof(ProcessingFailed.Simplified))]  // REASON: Base URL or API key to NotifyNL API service were incorrect
         [ProducesResponseType(StatusCodes.Status400BadRequest,          Type = typeof(ProcessingFailed.Simplified))]  // REASON: Issues on the NotifyNL API service side
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProcessingFailed.Simplified))]  // REASON: Unexpected internal error, not handled by API logic
         public async Task<IActionResult> SendEmailAsync(
@@ -93,9 +94,9 @@ namespace EventsHandler.Controllers
                 var notifyClient = new NotificationClient(
                     this._configuration.Notify.API.BaseUrl(),
                     this._configuration.User.API.Key.NotifyNL());
-                
+
                 // Determine first possible Email template ID if nothing was provided
-                List<TemplateResponse>? allTemplates = (await notifyClient.GetAllTemplatesAsync("email")).templates;
+                List<TemplateResponse>? allTemplates = (await notifyClient.GetAllTemplatesAsync("email")).templates; // NOTE: Assign to variables for debug purposes
                 emailTemplateId ??= allTemplates.First().id;
 
                 // NOTE: Empty personalization
@@ -116,26 +117,47 @@ namespace EventsHandler.Controllers
                 string message;
                 Match match;
 
-                // NOTE: Personalization is required by NotifyNL message template, but it was not provided
-                if ((match = _personalisationPattern.Match(exception.Message)).Success)
+                if (_templateIdInvalidFormatPattern.Match(exception.Message).Success)  // NOTE: The template ID is not in UUID (Universal Unique Identifier) format
+                {
+                    const string invalidUuid = "Template ID is not a valid UUID";
+
+                    message = invalidUuid;
+                }
+                else if ((match = _invalidApiKeyPattern.Match(exception.Message)).Success)  // NOTE: The API key is invalid (access to NotifyNL API service denied)
+                {
+                    message = match.Value;
+                    
+                    // NOTE: This specific error message is inconsistently returned from Notify .NET client with 403 Forbidden status code (unlike others - with 400 BadRequest code)
+                    return StatusCode((int)HttpStatusCode.Forbidden, new ProcessingFailed.Simplified(HttpStatusCode.Forbidden, message));
+                }
+                else if ((match = _templateNotFoundPattern.Match(exception.Message)).Success ||      // NOTE: The message template could not be find based on provided template ID
+                         (match = _personalizationMissingPattern.Match(exception.Message)).Success)  // NOTE: Personalization was required by message template but wasn't provided
                 {
                     message = match.Value;
                 }
                 else
                 {
+                    // Everything else, returned as NotifyClientException (to be handled during development process, for better UX experience)
                     message = exception.Message;
                 }
 
                 return BadRequest(new ProcessingFailed.Simplified(HttpStatusCode.BadRequest, message));
-                //return this._responder.GetStandardized_Exception_ActionResult(message);
             }
+            // NOTE: Authorization issues wrapped around 403 Forbidden status code
+            catch (NotifyAuthException exception)
+            {
+                return StatusCode((int)HttpStatusCode.Forbidden, new ProcessingFailed.Simplified(HttpStatusCode.Forbidden, exception.Message));
+            }
+            // NOTE: Unexpected issues wrapped around 500 Internal Server Error status code
             catch (Exception exception)
             {
                 return BadRequest(new ProcessingFailed.Simplified(HttpStatusCode.InternalServerError, exception.Message));
-                //return this._responder.GetStandardized_Exception_ActionResult(exception);
             }
         }
 
-        private readonly Regex _personalisationPattern = new("Missing personalisation\\:[a-z.,\\ ]+", RegexOptions.Compiled);
+        private readonly Regex _invalidApiKeyPattern = new("Invalid token: service not found", RegexOptions.Compiled);
+        private readonly Regex _templateIdInvalidFormatPattern = new("template_id is not a valid UUID", RegexOptions.Compiled);
+        private readonly Regex _templateNotFoundPattern = new("Template not found", RegexOptions.Compiled);
+        private readonly Regex _personalizationMissingPattern = new("Missing personalisation\\:[a-z.,\\ ]+", RegexOptions.Compiled);
     }
 }
