@@ -85,9 +85,10 @@ namespace EventsHandler.Controllers
         // Swagger UI
         [SwaggerRequestExample(typeof(Dictionary<string, object>), typeof(PersonalizationExample))]
         [ProducesResponseType(StatusCodes.Status202Accepted)]                                                         // REASON: The notification successfully sent to NotifyNL API service
+        [ProducesResponseType(StatusCodes.Status400BadRequest,          Type = typeof(ProcessingFailed.Simplified))]  // REASON: Issues on the NotifyNL API service side
         [ProducesResponseType(StatusCodes.Status401Unauthorized,        Type = typeof(string))]                       // REASON: JWT Token is invalid or expired
         [ProducesResponseType(StatusCodes.Status403Forbidden,           Type = typeof(ProcessingFailed.Simplified))]  // REASON: Base URL or API key to NotifyNL API service were incorrect
-        [ProducesResponseType(StatusCodes.Status400BadRequest,          Type = typeof(ProcessingFailed.Simplified))]  // REASON: Issues on the NotifyNL API service side
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ProcessingFailed.Detailed))]    // REASON: The JSON structure is invalid
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProcessingFailed.Simplified))]  // REASON: Unexpected internal error, not yet handled by Notify OMC logic
         public async Task<IActionResult> SendEmailAsync(
             [Required, FromQuery] string emailAddress,
@@ -123,9 +124,10 @@ namespace EventsHandler.Controllers
         // Swagger UI
         [SwaggerRequestExample(typeof(Dictionary<string, object>), typeof(PersonalizationExample))]
         [ProducesResponseType(StatusCodes.Status202Accepted)]                                                         // REASON: The notification successfully sent to NotifyNL API service
+        [ProducesResponseType(StatusCodes.Status400BadRequest,          Type = typeof(ProcessingFailed.Simplified))]  // REASON: Issues on the NotifyNL API service side
         [ProducesResponseType(StatusCodes.Status401Unauthorized,        Type = typeof(string))]                       // REASON: JWT Token is invalid or expired
         [ProducesResponseType(StatusCodes.Status403Forbidden,           Type = typeof(ProcessingFailed.Simplified))]  // REASON: Base URL or API key to NotifyNL API service were incorrect
-        [ProducesResponseType(StatusCodes.Status400BadRequest,          Type = typeof(ProcessingFailed.Simplified))]  // REASON: Issues on the NotifyNL API service side
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ProcessingFailed.Detailed))]    // REASON: The JSON structure is invalid
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProcessingFailed.Simplified))]  // REASON: Unexpected internal error, not yet handled by Notify OMC logic
         public async Task<IActionResult> SendSmsAsync(
             [Required, FromQuery] string mobileNumber,
@@ -195,7 +197,7 @@ namespace EventsHandler.Controllers
                     };
                 }
 
-                return Ok(new ProcessingFailed.Simplified(HttpStatusCode.Accepted, "Email was successfully send to NotifyNL"));
+                return Accepted(new ProcessingFailed.Simplified(HttpStatusCode.Accepted, "Email was successfully send to NotifyNL"));
             }
             catch (NotifyClientException exception)
             {
@@ -215,8 +217,9 @@ namespace EventsHandler.Controllers
                     // NOTE: This specific error message is inconsistently returned from Notify .NET client with 403 Forbidden status code (unlike others - with 400 BadRequest code)
                     return StatusCode((int)HttpStatusCode.Forbidden, new ProcessingFailed.Simplified(HttpStatusCode.Forbidden, message));
                 }
-                else if ((match = _templateNotFoundPattern.Match(exception.Message)).Success ||      // NOTE: The message template could not be find based on provided template ID
-                         (match = _personalizationMissingPattern.Match(exception.Message)).Success)  // NOTE: Personalization was required by message template but wasn't provided
+                else if ((match = _templateNotFoundPattern.Match(exception.Message)).Success ||     // NOTE: The message template could not be find based on provided template ID
+                         (match = _personalizationMissingPattern.Match(exception.Message)).Success  // NOTE: Personalization was required by message template but wasn't provided
+                         )
                 {
                     message = match.Value;
                 }

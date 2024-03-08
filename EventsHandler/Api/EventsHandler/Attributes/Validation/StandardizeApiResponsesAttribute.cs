@@ -25,6 +25,7 @@ namespace EventsHandler.Attributes.Validation
             // Intercepting model binding validation issues
             if (ContainsValidationProblems(context, out ValidationProblemDetails? details))
             {
+                // TODO: Switch to IRespondingService with different generic to catch generic JSON issues (without text "Notification could not be...")
                 IRespondingService<NotificationEvent> outputService =
                     context.HttpContext.RequestServices.GetRequiredService<IRespondingService<NotificationEvent>>();
 
