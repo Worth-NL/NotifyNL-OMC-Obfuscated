@@ -48,7 +48,7 @@ namespace EventsHandler.Controllers
         /// <param name="responder">The output standardization service (UX/UI).</param>
         public TestController(
             WebApiConfiguration configuration,
-            IRespondingService<NotificationEvent> responder)
+            IRespondingService<NotificationEvent> responder)  // TODO: Different generic to be used
         {
             this._configuration = configuration;
             this._responder = responder;
