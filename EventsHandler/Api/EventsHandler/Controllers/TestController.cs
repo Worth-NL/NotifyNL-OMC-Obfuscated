@@ -32,8 +32,13 @@ namespace EventsHandler.Controllers
     [ApiVersion(DefaultValues.ApiController.Version)]
     public sealed class TestController : ControllerBase
     {
+        private readonly Regex _invalidApiKeyPattern = new("Invalid token: service not found", RegexOptions.Compiled);
+        private readonly Regex _templateIdInvalidFormatPattern = new("template_id is not a valid UUID", RegexOptions.Compiled);
+        private readonly Regex _templateNotFoundPattern = new("Template not found", RegexOptions.Compiled);
+        private readonly Regex _personalizationMissingPattern = new("Missing personalisation\\:[a-z.,\\ ]+", RegexOptions.Compiled);
+
         private readonly WebApiConfiguration _configuration;
-        private readonly IRespondingService<NotificationEvent> _responder;
+        private readonly IRespondingService<NotificationEvent> _responder;  // TODO: To be used
         
         /// <summary>
         /// Initializes a new instance of the <see cref="TestController"/> class.
@@ -88,6 +93,7 @@ namespace EventsHandler.Controllers
             [Optional, FromQuery] string? emailTemplateId,
             [Optional, FromBody] Dictionary<string, object> personalization)
         {
+            // TODO: This logic should be extracted into dedicated services (especially the logging errors part, as an extension of existing IRespondingService)
             try
             {
                 // Initialize the .NET client of NotifyNL API service
@@ -154,10 +160,5 @@ namespace EventsHandler.Controllers
                 return BadRequest(new ProcessingFailed.Simplified(HttpStatusCode.InternalServerError, exception.Message));
             }
         }
-
-        private readonly Regex _invalidApiKeyPattern = new("Invalid token: service not found", RegexOptions.Compiled);
-        private readonly Regex _templateIdInvalidFormatPattern = new("template_id is not a valid UUID", RegexOptions.Compiled);
-        private readonly Regex _templateNotFoundPattern = new("Template not found", RegexOptions.Compiled);
-        private readonly Regex _personalizationMissingPattern = new("Missing personalisation\\:[a-z.,\\ ]+", RegexOptions.Compiled);
     }
 }
