@@ -24,7 +24,7 @@ namespace EventsHandler.Controllers
     /// <summary>
     /// Controller used to test other API services from which NotifyNL OMC is dependent.
     /// </summary>
-    /// <seealso cref="ControllerBase" />
+    /// <seealso cref="ControllerBase"/>
     [ApiController]
     [Route(DefaultValues.ApiController.Route)]
     [Consumes(DefaultValues.Request.ContentType)]
@@ -32,6 +32,7 @@ namespace EventsHandler.Controllers
     [ApiVersion(DefaultValues.ApiController.Version)]
     public sealed class TestController : ControllerBase
     {
+        // TODO: To be extracted into IValidationService
         private readonly Regex _invalidApiKeyPattern = new("Invalid token: service not found", RegexOptions.Compiled);
         private readonly Regex _templateIdInvalidFormatPattern = new("template_id is not a valid UUID", RegexOptions.Compiled);
         private readonly Regex _templateNotFoundPattern = new("Template not found", RegexOptions.Compiled);
