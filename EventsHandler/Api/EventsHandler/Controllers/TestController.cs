@@ -35,9 +35,21 @@ namespace EventsHandler.Controllers
     {
         // TODO: To be extracted into IValidationService
         private readonly Regex _invalidApiKeyPattern = new("Invalid token: service not found", RegexOptions.Compiled);
-        private readonly Regex _templateIdInvalidFormatPattern = new("template_id is not a valid UUID", RegexOptions.Compiled);
-        private readonly Regex _templateNotFoundPattern = new("Template not found", RegexOptions.Compiled);
-        private readonly Regex _personalizationMissingPattern = new("Missing personalisation\\:[a-z.,\\ ]+", RegexOptions.Compiled);
+
+        private readonly Regex _missingEmailAddressPattern = new("Address field is required", RegexOptions.Compiled);
+        private readonly Regex _invalidEmailSymbolsPattern = new("Not a valid email address", RegexOptions.Compiled);
+
+        private readonly Regex _missingPhoneNumberPattern = new("Number field is required", RegexOptions.Compiled);
+        private readonly Regex _invalidPhoneSymbolsPattern = new("Must not contain letters or symbols", RegexOptions.Compiled);
+        private readonly Regex _invalidPhoneTooShortPattern = new("Not enough digits", RegexOptions.Compiled);
+        private readonly Regex _invalidPhoneTooLongPattern = new("Too many digits", RegexOptions.Compiled);
+        private readonly Regex _invalidPhoneFormatPattern = new("Please enter mobile number according to the expected format", RegexOptions.Compiled);
+
+        private readonly Regex _invalidTemplateIdFormatPattern = new("not a valid UUID", RegexOptions.Compiled);
+        
+        private readonly Regex _notFoundTemplatePattern = new("Template not found", RegexOptions.Compiled);
+
+        private readonly Regex _missingPersonalizationPattern = new("Missing personalisation\\:[a-z.,\\ ]+", RegexOptions.Compiled);
 
         private readonly WebApiConfiguration _configuration;
         private readonly IRespondingService<NotificationEvent> _responder;  // TODO: To be used
@@ -56,8 +68,7 @@ namespace EventsHandler.Controllers
         }
 
         /// <summary>
-        /// Sending Email messages to the NotifyNL API service. 
-        /// Ensure that base URL and API key for NotifyNL API service are provided in the configuration.
+        /// Sending Email messages to the NotifyNL API service.
         /// </summary>
         /// <param name="emailAddress">The email address (required) where the notification should be sent.</param>
         /// <param name="emailTemplateId">The email template ID (optional) to be used from NotifyNL API service.
@@ -103,8 +114,7 @@ namespace EventsHandler.Controllers
         }
 
         /// <summary>
-        /// Sending SMS text messages to the NotifyNL API service. 
-        /// Ensure that base URL and API key for NotifyNL API service are provided in the configuration.
+        /// Sending SMS text messages to the NotifyNL API service.
         /// </summary>
         /// <param name="mobileNumber">The mobile phone number (required) where the notification should be sent.</param>
         /// <param name="smsTemplateId">The SMS template ID (optional) to be used from NotifyNL API service.
@@ -177,13 +187,15 @@ namespace EventsHandler.Controllers
 
                 // TODO: To be extracted into a dedicated service
                 // NOTE: Empty personalization
-                if (personalization.Count == 1 || personalization.ContainsKey("key"))
+                if (personalization.Count <= 1 &&
+                    personalization.TryGetValue(PersonalizationExample.Key, out object? value) &&
+                    Equals(value, PersonalizationExample.Value))
                 {
                     NotificationResponse _ = notifyMethod switch
                     {
                         NotifyMethods.Email => await notifyClient.SendEmailAsync(contactDetails, templateId),
                         NotifyMethods.Sms   => await notifyClient.SendSmsAsync(contactDetails, templateId),
-                        _                   => NotImplementedNotifyMethod()
+                        _ => NotImplementedNotifyMethod()
                     };
                 }
                 // NOTE: Personalization was provided by the user
@@ -193,7 +205,7 @@ namespace EventsHandler.Controllers
                     {
                         NotifyMethods.Email => await notifyClient.SendEmailAsync(contactDetails, templateId, personalization),
                         NotifyMethods.Sms   => await notifyClient.SendSmsAsync(contactDetails, templateId, personalization),
-                        _                   => NotImplementedNotifyMethod()
+                        _ => NotImplementedNotifyMethod()
                     };
                 }
 
@@ -204,28 +216,47 @@ namespace EventsHandler.Controllers
                 string message;
                 Match match;
 
-                if (_templateIdInvalidFormatPattern.Match(exception.Message).Success)  // NOTE: The template ID is not in UUID (Universal Unique Identifier) format
-                {
-                    const string invalidUuid = "Template ID is not a valid UUID";
-
-                    message = invalidUuid;
-                }
-                else if ((match = _invalidApiKeyPattern.Match(exception.Message)).Success)  // NOTE: The API key is invalid (access to NotifyNL API service denied)
+                // HttpStatus Code: 403 Forbidden
+                if ((match = _invalidApiKeyPattern.Match(exception.Message)).Success)  // NOTE: The API key is invalid (access to NotifyNL API service denied)
                 {
                     message = match.Value;
                     
                     // NOTE: This specific error message is inconsistently returned from Notify .NET client with 403 Forbidden status code (unlike others - with 400 BadRequest code)
                     return StatusCode((int)HttpStatusCode.Forbidden, new ProcessingFailed.Simplified(HttpStatusCode.Forbidden, message));
                 }
-                else if ((match = _templateNotFoundPattern.Match(exception.Message)).Success ||     // NOTE: The message template could not be find based on provided template ID
-                         (match = _personalizationMissingPattern.Match(exception.Message)).Success  // NOTE: Personalization was required by message template but wasn't provided
-                         )
+                
+                // HttpStatus Code: 400 BadRequest
+                if ((match = _missingEmailAddressPattern.Match(exception.Message)).Success ||  // NOTE: The email address is empty (whitespaces only)
+                    (match = _invalidEmailSymbolsPattern.Match(exception.Message)).Success)    // NOTE: The email address is invalid
+                {
+                    const string email = "Email: ";
+
+                    message = $"{email}{match.Value}";
+                }
+                else if ((match = _missingPhoneNumberPattern.Match(exception.Message)).Success   ||  // NOTE: The phone number is empty (whitespaces only)
+                         (match = _invalidPhoneSymbolsPattern.Match(exception.Message)).Success  ||  // NOTE: The phone number contains letters or illegal symbols
+                         (match = _invalidPhoneTooShortPattern.Match(exception.Message)).Success ||  // NOTE: The phone number contains not enough digits
+                         (match = _invalidPhoneTooLongPattern.Match(exception.Message)).Success  ||  // NOTE: The phone number contains too many digits
+                         (match = _invalidPhoneFormatPattern.Match(exception.Message)).Success)      // NOTE: The phone number format is invalid: e.g., the country code is unsupported
+                {
+                    const string phone = "Phone: ";
+
+                    message = $"{phone}{match.Value}";
+                }
+                else if (_invalidTemplateIdFormatPattern.Match(exception.Message).Success)  // NOTE: The template ID is not in UUID (Universal Unique Identifier) format
+                {
+                    const string template = "Template: Is ";  // "is" is not capitalized in the original error message
+
+                    message = $"{template}{match.Value}";
+                }
+                else if ((match = _notFoundTemplatePattern.Match(exception.Message)).Success ||      // NOTE: The message template could not be find based on provided template ID
+                         (match = _missingPersonalizationPattern.Match(exception.Message)).Success)  // NOTE: Personalization was required by message template but wasn't provided
                 {
                     message = match.Value;
                 }
                 else
                 {
-                    // Everything else, returned as NotifyClientException (to be handled during development process, for better UX experience)
+                    // Everything else that is throw as NotifyClientException (NOTE: for better UX experience it should be also handled and formatted appropriately)
                     message = exception.Message;
                 }
 
