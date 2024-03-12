@@ -69,38 +69,36 @@ namespace EventsHandler.Attributes.Validation
         /// <summary>
         /// Tries to get valid and meaningful error message from the collection of encountered errors.
         /// </summary>
-        /// <param name="errorDetails">The error details to be revieved.</param>
+        /// <param name="errorDetails">The error details to be reviewed.</param>
         /// <param name="errorMessage">The error message to be returned.</param>
         /// <returns>
         ///   <see langword="true"/> if an error message was found; otherwise, <see langword="false"/>.
         /// </returns>
         private static bool ContainsErrorMessage(IDictionary<string, string[]> errorDetails, out string errorMessage)
         {
-            const int MessageIndex = 0;     // NOTE: Under index 1 the source is stored (where the error encountered: property, object)
-            const string MessageKey = "$";  // NOTE: The data binding validation mechanism is storing error messages under this predefined key + .[source]
+            const int messageIndex = 0;     // NOTE: Under index 1 the source is stored (where the error encountered: property, object)
+            const string messageKey = "$";  // NOTE: The data binding validation mechanism is storing error messages under this predefined key + .[source]
 
             // Known keys where error messages are present for sure
-            if (errorDetails.TryGetValue(MessageKey,                out string[]? errorMessages) ||
-                errorDetails.TryGetValue($"{MessageKey}.kanaal",    out           errorMessages) ||
-                errorDetails.TryGetValue($"{MessageKey}.kenmerken", out           errorMessages))
+            if (errorDetails.TryGetValue(messageKey,                out string[]? errorMessages) ||
+                errorDetails.TryGetValue($"{messageKey}.kanaal",    out           errorMessages) ||
+                errorDetails.TryGetValue($"{messageKey}.kenmerken", out           errorMessages))
             {
-                errorMessage = errorMessages[MessageIndex];
+                errorMessage = errorMessages[messageIndex];
 
                 return true;
             }
+
             // Dynamic fallback strategy, to retrieve an error message anyway
-            else
+            KeyValuePair<string, string[]>[] errorDetailsPairs = errorDetails.ToArray();
+
+            for (int index = 0; index < errorDetails.Count; index++)
             {
-                KeyValuePair<string, string[]>[] errorDetailsPairs = errorDetails.ToArray();
-
-                for (int index = 0; index < errorDetails.Count; index++)
+                if (errorDetailsPairs[index].Key.StartsWith(messageKey))
                 {
-                    if (errorDetailsPairs[index].Key.StartsWith(MessageKey))
-                    {
-                        errorMessage = errorDetailsPairs[index].Value[MessageIndex];
+                    errorMessage = errorDetailsPairs[index].Value[messageIndex];
 
-                        return true;
-                    }
+                    return true;
                 }
             }
 
