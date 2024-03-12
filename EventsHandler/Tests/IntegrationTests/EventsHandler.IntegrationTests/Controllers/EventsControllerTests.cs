@@ -31,7 +31,7 @@ namespace EventsHandler.IntegrationTests.Controllers
         private Mock<ISerializationService> _serializerMock = new();
         private Mock<IValidationService<NotificationEvent>> _validatorMock = new();
         private Mock<IProcessingService<NotificationEvent>> _processorMock = new();
-        private Mock<IRespondingService<NotificationEvent>> _responderMock = new();
+        private Mock<IRespondingService<(ProcessingResult Status, string Description)>> _responderMock = new();
         private Mock<ILogger<EventsController>> _loggerMock = new();
 
         [OneTimeSetUp]
@@ -40,7 +40,7 @@ namespace EventsHandler.IntegrationTests.Controllers
             this._serializerMock = new Mock<ISerializationService>(MockBehavior.Strict);
             this._validatorMock = new Mock<IValidationService<NotificationEvent>>(MockBehavior.Strict);
             this._processorMock = new Mock<IProcessingService<NotificationEvent>>(MockBehavior.Strict);
-            this._responderMock = new Mock<IRespondingService<NotificationEvent>>(MockBehavior.Strict);
+            this._responderMock = new Mock<IRespondingService<(ProcessingResult Status, string Description)>>(MockBehavior.Strict);
             this._loggerMock = new Mock<ILogger<EventsController>>(MockBehavior.Loose);
         }
 
@@ -209,7 +209,7 @@ namespace EventsHandler.IntegrationTests.Controllers
                                         this._loggerMock.Object);
         }
 
-        private static IRespondingService<NotificationEvent> GetRealResponderService()
+        private static IRespondingService<(ProcessingResult Status, string Description)> GetRealResponderService()
         {
             return new NotificationResponder(new DetailsBuilder());
         }

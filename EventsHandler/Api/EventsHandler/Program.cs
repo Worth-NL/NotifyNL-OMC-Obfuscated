@@ -49,6 +49,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 using EventsHandler.Services.DataLoading.Interfaces;
 using ConfigurationExtensions = EventsHandler.Extensions.ConfigurationExtensions;
+using EventsHandler.Behaviors.Mapping.Enums;
 
 namespace EventsHandler
 {
@@ -202,7 +203,8 @@ namespace EventsHandler
             builder.Services.AddSingleton<ITemplatesService<TemplateResponse, NotificationEvent>, NotifyTemplatesAnalyzer>();
             builder.Services.AddSingleton<ISendingService<NotificationEvent, NotifyData>, NotifySender>();
             builder.Services.AddSingleton<IFeedbackTelemetryService, NotifyTelemetryService>();
-            builder.Services.AddSingleton<IRespondingService<NotificationEvent>, NotificationResponder>();
+
+            builder.Services.AddSingleton<IRespondingService<(ProcessingResult Status, string Description)>, NotificationResponder>();
 
             return builder;
         }

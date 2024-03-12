@@ -1,7 +1,6 @@
 ﻿// © 2023, Worth Systems.
 
 using EventsHandler.Behaviors.Mapping.Enums;
-using EventsHandler.Behaviors.Mapping.Models.POCOs.NotificatieApi;
 using EventsHandler.Behaviors.Responding.Messages.Models.Details;
 using EventsHandler.Behaviors.Responding.Messages.Models.Details.Base;
 using EventsHandler.Behaviors.Responding.Messages.Models.Informations;
@@ -18,7 +17,7 @@ using System.Net;
 namespace EventsHandler.Services.UserCommunication
 {
     /// <inheritdoc cref="IRespondingService{TModel}"/>
-    internal sealed class NotificationResponder : IRespondingService<NotificationEvent>
+    internal sealed class NotificationResponder : IRespondingService<(ProcessingResult Status, string Description)>
     {
         private readonly IDetailsBuilder _detailsBuilder;
 
@@ -30,22 +29,26 @@ namespace EventsHandler.Services.UserCommunication
             this._detailsBuilder = builder;
         }
 
-        #region Interface
-        /// <inheritdoc cref="IRespondingService{TModel}.GetStandardized_Processing_ActionResult(ValueTuple{ProcessingResult, string}, BaseEnhancedDetails)"/>
-        ObjectResult IRespondingService<NotificationEvent>.GetStandardized_Processing_ActionResult((ProcessingResult Status, string Description) result, BaseEnhancedDetails notificationDetails)
-            => GetStandardized_Processing_ActionResult(result, notificationDetails);
-
-        /// <inheritdoc cref="IRespondingService{TModel}.GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails)"/>
-        ObjectResult IRespondingService<NotificationEvent>.GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails notificationDetails)
-            => GetStandardized_Processing_Failed_ActionResult(notificationDetails);
-
-        /// <inheritdoc cref="IRespondingService{TModel}.GetStandardized_Exception_ActionResult(Exception)"/>
-        ObjectResult IRespondingService<NotificationEvent>.GetStandardized_Exception_ActionResult(Exception exception)
+        #region IRespondingService
+        /// <inheritdoc cref="IRespondingService.GetStandardized_Exception_ActionResult(Exception)"/>
+        ObjectResult IRespondingService.GetStandardized_Exception_ActionResult(Exception exception)
             => GetStandardized_Exception_ActionResult(exception);
 
-        /// <inheritdoc cref="IRespondingService{TModel}.GetStandardized_Exception_ActionResult(string)"/>
-        ObjectResult IRespondingService<NotificationEvent>.GetStandardized_Exception_ActionResult(string errorMessage)
+        /// <inheritdoc cref="IRespondingService.GetStandardized_Exception_ActionResult(string)"/>
+        ObjectResult IRespondingService.GetStandardized_Exception_ActionResult(string errorMessage)
             => GetStandardized_Error_ActionResult(errorMessage);
+        #endregion
+
+        #region IRespondingService<TModel>
+        /// <inheritdoc cref="IRespondingService{TResult}.GetStandardized_Processing_ActionResult(TResult, BaseEnhancedDetails)"/>
+        ObjectResult IRespondingService<(ProcessingResult Status, string Description)>
+            .GetStandardized_Processing_ActionResult((ProcessingResult Status, string Description) result, BaseEnhancedDetails notificationDetails)
+            => GetStandardized_Processing_ActionResult(result, notificationDetails);
+
+        /// <inheritdoc cref="IRespondingService{TResult}.GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails)"/>
+        ObjectResult IRespondingService<(ProcessingResult Status, string Description)>
+            .GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails notificationDetails)
+            => GetStandardized_Processing_Failed_ActionResult(notificationDetails);
         #endregion
 
         #region Implementation
