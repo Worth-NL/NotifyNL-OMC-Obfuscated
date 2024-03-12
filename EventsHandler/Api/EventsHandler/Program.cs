@@ -202,7 +202,7 @@ namespace EventsHandler
             builder.Services.AddSingleton<ITemplatesService<TemplateResponse, NotificationEvent>, NotifyTemplatesAnalyzer>();
             builder.Services.AddSingleton<ISendingService<NotificationEvent, NotifyData>, NotifySender>();
             builder.Services.AddSingleton<IFeedbackTelemetryService, NotifyTelemetryService>();
-            builder.Services.AddSingleton<IRespondingService<NotificationEvent>, ApiResponder>();
+            builder.Services.AddSingleton<IRespondingService<NotificationEvent>, NotificationResponder>();
 
             return builder;
         }

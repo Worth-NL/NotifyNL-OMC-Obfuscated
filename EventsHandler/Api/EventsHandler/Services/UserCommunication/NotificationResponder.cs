@@ -18,14 +18,14 @@ using System.Net;
 namespace EventsHandler.Services.UserCommunication
 {
     /// <inheritdoc cref="IRespondingService{TModel}"/>
-    internal sealed class ApiResponder : IRespondingService<NotificationEvent>
+    internal sealed class NotificationResponder : IRespondingService<NotificationEvent>
     {
         private readonly IDetailsBuilder _detailsBuilder;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiResponder"/> class.
+        /// Initializes a new instance of the <see cref="NotificationResponder"/> class.
         /// </summary>
-        public ApiResponder(IDetailsBuilder builder)
+        public NotificationResponder(IDetailsBuilder builder)
         {
             this._detailsBuilder = builder;
         }
