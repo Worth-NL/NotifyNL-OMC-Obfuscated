@@ -5,6 +5,7 @@ using EventsHandler.Behaviors.Communication.Strategy.Interfaces;
 using EventsHandler.Behaviors.Communication.Strategy.Manager;
 using EventsHandler.Behaviors.Communication.Strategy.Models.DTOs;
 using EventsHandler.Behaviors.Mapping.Models.POCOs.NotificatieApi;
+using EventsHandler.Behaviors.Responding.Messages.Models.Details.Base;
 using EventsHandler.Behaviors.Responding.Results.Builder;
 using EventsHandler.Behaviors.Responding.Results.Builder.Interface;
 using EventsHandler.Configuration;
@@ -12,6 +13,7 @@ using EventsHandler.Constants;
 using EventsHandler.Extensions;
 using EventsHandler.Properties;
 using EventsHandler.Services.DataLoading;
+using EventsHandler.Services.DataLoading.Interfaces;
 using EventsHandler.Services.DataLoading.Strategy.Interfaces;
 using EventsHandler.Services.DataLoading.Strategy.Manager;
 using EventsHandler.Services.DataProcessing;
@@ -47,9 +49,7 @@ using SecretsManager.Services.Authentication.Encryptions.Strategy.Context;
 using SecretsManager.Services.Authentication.Encryptions.Strategy.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
-using EventsHandler.Services.DataLoading.Interfaces;
 using ConfigurationExtensions = EventsHandler.Extensions.ConfigurationExtensions;
-using EventsHandler.Behaviors.Mapping.Enums;
 
 namespace EventsHandler
 {
@@ -203,8 +203,7 @@ namespace EventsHandler
             builder.Services.AddSingleton<ITemplatesService<TemplateResponse, NotificationEvent>, NotifyTemplatesAnalyzer>();
             builder.Services.AddSingleton<ISendingService<NotificationEvent, NotifyData>, NotifySender>();
             builder.Services.AddSingleton<IFeedbackTelemetryService, NotifyTelemetryService>();
-
-            builder.Services.AddSingleton<IRespondingService<NotificationEvent, NotificationResponder>>();
+            builder.Services.RegisterResponders();
 
             return builder;
         }
@@ -250,6 +249,15 @@ namespace EventsHandler
         {
             services.AddSingleton<IHttpClientFactory<HttpClient, (string, string)[]>, HeadersHttpClientFactory>();
             services.AddSingleton<IHttpClientFactory<INotifyClient, string>, NotificationClientFactory>();
+        }
+
+        private static void RegisterResponders(this IServiceCollection services)
+        {
+            // Implicit interface (Adapter) for the main EventsController (is used most often, and it looks cleaner with single generic)
+            services.AddSingleton<IRespondingService<NotificationEvent>, NotificationResponder>();
+            
+            // Explicit interfaces
+            services.AddSingleton<IRespondingService<NotificationResponse, BaseSimpleDetails>, NotifyResponder>();
         }
 
         /// <summary>
