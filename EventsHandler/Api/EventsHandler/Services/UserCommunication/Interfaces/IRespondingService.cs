@@ -62,7 +62,7 @@ namespace EventsHandler.Services.UserCommunication.Interfaces
     /// <summary>
     /// <inheritdoc cref="IRespondingService{TResult, TDetails}"/>
     /// <para>
-    ///   Specialized to be used with <typeparamref name="TModel"/> objects.
+    ///   Dedicated to be used with <typeparamref name="TModel"/> objects.
     /// </para>
     /// </summary>
     /// <seealso cref="IRespondingService{TResult, TDetails}"/>
