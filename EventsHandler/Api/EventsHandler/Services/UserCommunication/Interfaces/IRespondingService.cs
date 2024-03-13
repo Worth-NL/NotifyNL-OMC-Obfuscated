@@ -66,7 +66,7 @@ namespace EventsHandler.Services.UserCommunication.Interfaces
     /// </para>
     /// </summary>
     /// <seealso cref="IRespondingService{TResult, TDetails}"/>
-    public interface IRespondingService<TModel> : IRespondingService<(ProcessingResult, string), BaseEnhancedDetails>
+    public interface IRespondingService<TModel> : IRespondingService<(ProcessingResult, string), BaseEnhancedDetails>  // NOTE: This interface is implicitly following Adapter Design Pattern
         where TModel : IJsonSerializable
     {
         /// <inheritdoc cref="IRespondingService{TResult, TDetails}.GetStandardized_Processing_ActionResult(TResult, TDetails)"/>
