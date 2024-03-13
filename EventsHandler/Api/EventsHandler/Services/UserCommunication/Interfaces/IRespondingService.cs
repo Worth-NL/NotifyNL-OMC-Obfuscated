@@ -35,6 +35,7 @@ namespace EventsHandler.Services.UserCommunication.Interfaces
     /// </summary>
     /// <typeparam name="TResult">The generic type of the processing result.</typeparam>
     /// <typeparam name="TDetails">The more insightful details about the processing outcome.</typeparam>
+    /// <seealso cref="IRespondingService"/>
     public interface IRespondingService<in TResult, in TDetails> : IRespondingService
     {
         /// <summary>
@@ -58,8 +59,13 @@ namespace EventsHandler.Services.UserCommunication.Interfaces
         internal ObjectResult GetStandardized_Processing_Failed_ActionResult(TDetails details);
     }
 
-    // ReSharper disable once UnusedTypeParameter
+    /// <summary>
     /// <inheritdoc cref="IRespondingService{TResult, TDetails}"/>
+    /// <para>
+    ///   Specialized to be used with <typeparamref name="TModel"/> objects.
+    /// </para>
+    /// </summary>
+    /// <seealso cref="IRespondingService{TResult, TDetails}"/>
     public interface IRespondingService<TModel> : IRespondingService<(ProcessingResult, string), BaseEnhancedDetails>
         where TModel : IJsonSerializable
     {
