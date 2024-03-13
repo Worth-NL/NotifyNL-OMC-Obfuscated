@@ -34,7 +34,7 @@ namespace EventsHandler.Controllers
         private readonly ISerializationService _serializer;
         private readonly IValidationService<NotificationEvent> _validator;
         private readonly IProcessingService<NotificationEvent> _processor;
-        private readonly IRespondingService<(ProcessingResult Status, string Description)> _responder;
+        private readonly IRespondingService<NotificationEvent> _responder;
         private readonly ILogger<EventsController> _logger;
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace EventsHandler.Controllers
             ISerializationService serializer,
             IValidationService<NotificationEvent> validator,
             IProcessingService<NotificationEvent> processor,
-            IRespondingService<(ProcessingResult Status, string Description)> responder,
+            IRespondingService<NotificationEvent> responder,
             ILogger<EventsController> logger)
         {
             this._serializer = serializer;

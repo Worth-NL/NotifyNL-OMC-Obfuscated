@@ -204,7 +204,7 @@ namespace EventsHandler
             builder.Services.AddSingleton<ISendingService<NotificationEvent, NotifyData>, NotifySender>();
             builder.Services.AddSingleton<IFeedbackTelemetryService, NotifyTelemetryService>();
 
-            builder.Services.AddSingleton<IRespondingService<(ProcessingResult Status, string Description)>, NotificationResponder>();
+            builder.Services.AddSingleton<IRespondingService<NotificationEvent, NotificationResponder>>();
 
             return builder;
         }

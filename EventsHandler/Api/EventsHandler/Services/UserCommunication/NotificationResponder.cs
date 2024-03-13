@@ -1,6 +1,7 @@
 ﻿// © 2023, Worth Systems.
 
 using EventsHandler.Behaviors.Mapping.Enums;
+using EventsHandler.Behaviors.Mapping.Models.POCOs.NotificatieApi;
 using EventsHandler.Behaviors.Responding.Messages.Models.Details;
 using EventsHandler.Behaviors.Responding.Messages.Models.Details.Base;
 using EventsHandler.Behaviors.Responding.Messages.Models.Informations;
@@ -17,7 +18,7 @@ using System.Net;
 namespace EventsHandler.Services.UserCommunication
 {
     /// <inheritdoc cref="IRespondingService{TModel}"/>
-    internal sealed class NotificationResponder : IRespondingService<(ProcessingResult Status, string Description)>
+    internal sealed class NotificationResponder : IRespondingService<NotificationEvent>
     {
         private readonly IDetailsBuilder _detailsBuilder;
 
@@ -32,64 +33,17 @@ namespace EventsHandler.Services.UserCommunication
         #region IRespondingService
         /// <inheritdoc cref="IRespondingService.GetStandardized_Exception_ActionResult(Exception)"/>
         ObjectResult IRespondingService.GetStandardized_Exception_ActionResult(Exception exception)
-            => GetStandardized_Exception_ActionResult(exception);
-
-        /// <inheritdoc cref="IRespondingService.GetStandardized_Exception_ActionResult(string)"/>
-        ObjectResult IRespondingService.GetStandardized_Exception_ActionResult(string errorMessage)
-            => GetStandardized_Error_ActionResult(errorMessage);
-        #endregion
-
-        #region IRespondingService<TModel>
-        /// <inheritdoc cref="IRespondingService{TResult}.GetStandardized_Processing_ActionResult(TResult, BaseEnhancedDetails)"/>
-        ObjectResult IRespondingService<(ProcessingResult Status, string Description)>
-            .GetStandardized_Processing_ActionResult((ProcessingResult Status, string Description) result, BaseEnhancedDetails notificationDetails)
-            => GetStandardized_Processing_ActionResult(result, notificationDetails);
-
-        /// <inheritdoc cref="IRespondingService{TResult}.GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails)"/>
-        ObjectResult IRespondingService<(ProcessingResult Status, string Description)>
-            .GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails notificationDetails)
-            => GetStandardized_Processing_Failed_ActionResult(notificationDetails);
-        #endregion
-
-        #region Implementation
-        private static ObjectResult GetStandardized_Processing_ActionResult((ProcessingResult Status, string Description) result, BaseEnhancedDetails notificationDetails)
-        {
-            return result.Status switch
-            {
-                ProcessingResult.Success
-                    => new ProcessingSucceeded(result.Description, notificationDetails).AsResult_202(),
-
-                ProcessingResult.Skipped
-                    => new ProcessingSkipped(result.Description, notificationDetails).AsResult_206(),
-
-                ProcessingResult.Failure
-                    => string.Equals(notificationDetails.Message, Resources.Operation_RESULT_Deserialization_Failure) ||
-                       string.Equals(notificationDetails.Message, Resources.Deserialization_INFO_UnexpectedData_Notification_Message)
-                        ? new ProcessingFailed.Detailed(HttpStatusCode.UnprocessableEntity, result.Description, notificationDetails).AsResult_422()
-                        : new ProcessingFailed.Simplified(HttpStatusCode.BadRequest, result.Description).AsResult_400(),
-
-                _ => ObjectResultExtensions.AsResult_501()
-            };
-        }
-
-        private static ObjectResult GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails notificationDetails)
-        {
-            return GetStandardized_Processing_ActionResult(
-                (ProcessingResult.Failure, Resources.Processing_ERROR_Scenario_NotificationNotSent),
-                notificationDetails);
-        }
-
-        private ObjectResult GetStandardized_Exception_ActionResult(Exception exception)
         {
             if (exception is HttpRequestException)
             {
                 return this._detailsBuilder.Get<ErrorDetails>(Reasons.HttpRequestError, exception.Message).AsResult_400();
             }
 
-            return GetStandardized_Error_ActionResult(exception.Message);
+            return ((IRespondingService<NotificationEvent>)this).GetStandardized_Exception_ActionResult(exception.Message);
         }
 
-        private ObjectResult GetStandardized_Error_ActionResult(string errorMessage)
+        /// <inheritdoc cref="IRespondingService.GetStandardized_Exception_ActionResult(string)"/>
+        ObjectResult IRespondingService.GetStandardized_Exception_ActionResult(string errorMessage)
         {
             try
             {
@@ -109,6 +63,51 @@ namespace EventsHandler.Services.UserCommunication
             {
                 return this._detailsBuilder.Get<UnknownDetails>(Reasons.ValidationIssue).AsResult_500();
             }
+        }
+        #endregion
+
+        #region IRespondingService<TModel>
+        /// <inheritdoc cref="IRespondingService{TResult, TDetails}.GetStandardized_Processing_ActionResult(TResult, TDetails)"/>
+        ObjectResult IRespondingService<(ProcessingResult, string), BaseEnhancedDetails>.GetStandardized_Processing_ActionResult((ProcessingResult, string) result, BaseEnhancedDetails details)
+        {
+            return ((IRespondingService<NotificationEvent>)this).GetStandardized_Processing_ActionResult(result, details);
+        }
+
+        /// <inheritdoc cref="IRespondingService{TResult, TDetails}.GetStandardized_Processing_Failed_ActionResult(TDetails)"/>
+        ObjectResult IRespondingService<(ProcessingResult, string), BaseEnhancedDetails>.GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails details)
+        {
+            return ((IRespondingService<NotificationEvent>)this).GetStandardized_Processing_Failed_ActionResult(details);
+        }
+        #endregion
+
+        #region Implementation
+        /// <inheritdoc cref="IRespondingService{TModel}.GetStandardized_Processing_ActionResult(ValueTuple{ProcessingResult, string}, BaseEnhancedDetails)"/>
+        ObjectResult IRespondingService<NotificationEvent>.GetStandardized_Processing_ActionResult((ProcessingResult Status, string Description) result, BaseEnhancedDetails details)
+        {
+            return result.Status switch
+            {
+                ProcessingResult.Success
+                    => new ProcessingSucceeded(result.Description, details).AsResult_202(),
+
+                ProcessingResult.Skipped
+                    => new ProcessingSkipped(result.Description, details).AsResult_206(),
+
+                ProcessingResult.Failure
+                    => string.Equals(details.Message, Resources.Operation_RESULT_Deserialization_Failure) ||
+                       string.Equals(details.Message, Resources.Deserialization_INFO_UnexpectedData_Notification_Message)
+                        ? new ProcessingFailed.Detailed(HttpStatusCode.UnprocessableEntity, result.Description, details).AsResult_422()
+                        : new ProcessingFailed.Simplified(HttpStatusCode.BadRequest, result.Description).AsResult_400(),
+
+                _ => ObjectResultExtensions.AsResult_501()
+            };
+        }
+
+        /// <inheritdoc cref="IRespondingService{TModel}.GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails)"/>
+        ObjectResult IRespondingService<NotificationEvent>.GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails details)
+        {
+            return ((IRespondingService<NotificationEvent>)this).GetStandardized_Processing_ActionResult(
+                (ProcessingResult.Failure, Resources.Processing_ERROR_Scenario_NotificationNotSent),
+                details);
         }
         #endregion
 

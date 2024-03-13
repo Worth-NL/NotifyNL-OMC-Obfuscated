@@ -30,28 +30,43 @@ namespace EventsHandler.Services.UserCommunication.Interfaces
     /// <summary>
     /// <inheritdoc cref="IRespondingService"/>
     /// <para>
-    ///   Specialized in processing generic <typeparamref name="TResult"/> and <see cref="BaseEnhancedDetails"/>.
+    ///   Specialized in processing generic <typeparamref name="TResult"/> and <typeparamref name="TDetails"/>.
     /// </para>
     /// </summary>
-    /// <typeparam name="TResult">The generic type of the result.</typeparam>
-    public interface IRespondingService<in TResult> : IRespondingService
+    /// <typeparam name="TResult">The generic type of the processing result.</typeparam>
+    /// <typeparam name="TDetails">The more insightful details about the processing outcome.</typeparam>
+    public interface IRespondingService<in TResult, in TDetails> : IRespondingService
     {
         /// <summary>
-        /// Gets standardized <see cref="IActionResult"/> based on the received generic <typeparamref name="TResult"/> and <see cref="BaseEnhancedDetails"/>.
+        /// Gets standardized <see cref="IActionResult"/> based on the received generic <typeparamref name="TResult"/> and <typeparamref name="TDetails"/>.
         /// </summary>
         /// <param name="result">
-        ///   <inheritdoc cref="IRespondingService{TResult}" path="/typeparam[@name='TResult']"/>
+        ///   <inheritdoc cref="IRespondingService{TResult, TDetails}" path="/typeparam[@name='TResult']"/>
         /// </param>
-        /// <param name="notificationDetails">The more insightful details about the processing outcome.</param>
-        internal ObjectResult GetStandardized_Processing_ActionResult(TResult result, BaseEnhancedDetails notificationDetails);
+        /// <param name="details">
+        ///   <inheritdoc cref="IRespondingService{TResult, TDetails}" path="/typeparam[@name='TDetails']"/>
+        /// </param>
+        internal ObjectResult GetStandardized_Processing_ActionResult(TResult result, TDetails details);
 
         /// <summary>
-        /// Gets standardized failure <see cref="IActionResult"/> based on the received <see cref="BaseEnhancedDetails"/>.
+        /// Gets standardized failure <see cref="IActionResult"/> based on the received <typeparamref name="TDetails"/>.
         /// </summary>
-        /// <param name="notificationDetails">
-        ///   <inheritdoc cref="IRespondingService{TResult}.GetStandardized_Processing_ActionResult(TResult, BaseEnhancedDetails)"
-        ///               path="/param[@name='notificationDetails']"/>
+        /// <param name="details">
+        ///   <inheritdoc cref="IRespondingService{TResult, TDetails}.GetStandardized_Processing_ActionResult(TResult, TDetails)"
+        ///               path="/param[@name='details']"/>
         /// </param>
-        internal ObjectResult GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails notificationDetails);
+        internal ObjectResult GetStandardized_Processing_Failed_ActionResult(TDetails details);
+    }
+
+    // ReSharper disable once UnusedTypeParameter
+    /// <inheritdoc cref="IRespondingService{TResult, TDetails}"/>
+    public interface IRespondingService<TModel> : IRespondingService<(ProcessingResult, string), BaseEnhancedDetails>
+        where TModel : IJsonSerializable
+    {
+        /// <inheritdoc cref="IRespondingService{TResult, TDetails}.GetStandardized_Processing_ActionResult(TResult, TDetails)"/>
+        internal new ObjectResult GetStandardized_Processing_ActionResult((ProcessingResult Status, string Description) result, BaseEnhancedDetails details);
+
+        /// <inheritdoc cref="IRespondingService{TResult, TDetails}.GetStandardized_Processing_Failed_ActionResult(TDetails)"/>
+        internal new ObjectResult GetStandardized_Processing_Failed_ActionResult(BaseEnhancedDetails details);
     }
 }
