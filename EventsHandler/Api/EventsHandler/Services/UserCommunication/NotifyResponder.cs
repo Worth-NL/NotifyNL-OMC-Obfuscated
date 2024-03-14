@@ -77,28 +77,20 @@ namespace EventsHandler.Services.UserCommunication
                     }
                 
                     // HttpStatus Code: 400 BadRequest
-                    if ((match = MissingEmailAddressPattern().Match(exception.Message)).Success ||  // NOTE: The email address is empty (whitespaces only)
-                        (match = InvalidEmailSymbolsPattern().Match(exception.Message)).Success)    // NOTE: The email address is invalid
+                    if ((match = InvalidEmailSymbolsPattern().Match(exception.Message)).Success)  // NOTE: The email address is invalid
                     {
-                        const string email = "Email: ";
-
-                        message = $"{email}{match.Value}";
+                        message = GetEmailErrorMessage(match);
                     }
-                    else if ((match = MissingPhoneNumberPattern().Match(exception.Message)).Success   ||  // NOTE: The phone number is empty (whitespaces only)
-                             (match = InvalidPhoneSymbolsPattern().Match(exception.Message)).Success  ||  // NOTE: The phone number contains letters or illegal symbols
+                    else if ((match = InvalidPhoneSymbolsPattern().Match(exception.Message)).Success  ||  // NOTE: The phone number contains letters or illegal symbols
                              (match = InvalidPhoneTooShortPattern().Match(exception.Message)).Success ||  // NOTE: The phone number contains not enough digits
                              (match = InvalidPhoneTooLongPattern().Match(exception.Message)).Success  ||  // NOTE: The phone number contains too many digits
                              (match = InvalidPhoneFormatPattern().Match(exception.Message)).Success)      // NOTE: The phone number format is invalid: e.g., the country code is unsupported
                     {
-                        const string phone = "Phone: ";
-
-                        message = $"{phone}{match.Value}";
+                        message = GetPhoneErrorMessage(match);
                     }
                     else if (InvalidTemplateIdFormatPattern().Match(exception.Message).Success)  // NOTE: The template ID is not in UUID (Universal Unique Identifier) format
                     {
-                        const string template = "Template: Is ";  // "is" is not capitalized in the original error message
-
-                        message = $"{template}{match.Value}";
+                        message = GetTemplateErrorMessage(match);
                     }
                     else if ((match = NotFoundTemplatePattern().Match(exception.Message)).Success ||      // NOTE: The message template could not be find based on provided template ID
                              (match = MissingPersonalizationPattern().Match(exception.Message)).Success)  // NOTE: Personalization was required by message template but wasn't provided
@@ -111,7 +103,7 @@ namespace EventsHandler.Services.UserCommunication
                         message = exception.Message;
                     }
 
-                    return new BadRequestObjectResult(new ProcessingFailed.Simplified(HttpStatusCode.BadRequest, message));
+                    return ((IRespondingService)this).GetStandardized_Exception_ActionResult(message);
                 }
 
                 case NotifyAuthException:
@@ -130,7 +122,19 @@ namespace EventsHandler.Services.UserCommunication
         /// <inheritdoc cref="IRespondingService.GetStandardized_Exception_ActionResult(string)"/>
         ObjectResult IRespondingService.GetStandardized_Exception_ActionResult(string errorMessage)
         {
-            throw new NotImplementedException();
+            string? message = null;
+            Match match;
+
+            if ((match = MissingEmailAddressPattern().Match(errorMessage)).Success)  // NOTE: The email address is empty (whitespaces only)
+            {
+                message = GetEmailErrorMessage(match);
+            }
+            else if ((match = MissingPhoneNumberPattern().Match(errorMessage)).Success)  // NOTE: The phone number is empty (whitespaces only)
+            {
+                message = GetPhoneErrorMessage(match);
+            }
+
+            return new BadRequestObjectResult(new ProcessingFailed.Simplified(HttpStatusCode.BadRequest, message ?? errorMessage));
         }
         #endregion
 
@@ -145,6 +149,29 @@ namespace EventsHandler.Services.UserCommunication
         ObjectResult IRespondingService<NotificationResponse, BaseSimpleDetails>.GetStandardized_Processing_Failed_ActionResult(BaseSimpleDetails details)
         {
             throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Helper methods
+        private static string GetEmailErrorMessage(Capture match)
+        {
+            const string email = "Email: ";
+
+            return $"{email}{match.Value}";
+        }
+        
+        private static string GetPhoneErrorMessage(Capture match)
+        {
+            const string phone = "Phone: ";
+
+            return $"{phone}{match.Value}";
+        }
+        
+        private static string GetTemplateErrorMessage(Capture match)
+        {
+            const string template = "Template: Is ";  // "is" is not capitalized in the original error message
+
+            return $"{template}{match.Value}";
         }
         #endregion
     }
