@@ -466,6 +466,24 @@ namespace EventsHandler.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It wasn&apos;t possible to extract human-friendly error message.
+        /// </summary>
+        internal static string Processing_ERROR_ExecutingContext_UnknownErrorDetails {
+            get {
+                return ResourceManager.GetString("Processing_ERROR_ExecutingContext_UnknownErrorDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This controller is not yet registered as handled StandardizeApiResponse.
+        /// </summary>
+        internal static string Processing_ERROR_ExecutingContext_UnregisteredApiController {
+            get {
+                return ResourceManager.GetString("Processing_ERROR_ExecutingContext_UnregisteredApiController", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to It was not possible to determine the given data provider. It can be not implemented yet..
         /// </summary>
         internal static string Processing_ERROR_Loader_NotImplemented {

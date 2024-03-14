@@ -2,8 +2,10 @@
 
 using EventsHandler.Behaviors.Responding.Messages.Models.Details.Base;
 using EventsHandler.Behaviors.Responding.Messages.Models.Informations;
+using EventsHandler.Properties;
 using EventsHandler.Services.UserCommunication.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Notify.Exceptions;
 using Notify.Models.Responses;
 using System.Net;
@@ -15,17 +17,24 @@ namespace EventsHandler.Services.UserCommunication
     internal sealed partial class NotifyResponder : IRespondingService<NotificationResponse, BaseSimpleDetails>  // NOTE: "partial" is introduced by the new RegEx generation approach
     {
         #region RegEx patterns
+        // -------
+        // API Key
+        // -------
         [GeneratedRegex("Invalid token: service not found", RegexOptions.Compiled)]
         private static partial Regex InvalidApiKeyPattern();
 
-        // Email
+        // -----
+        // Email        
+        // -----
         [GeneratedRegex("Address field is required", RegexOptions.Compiled)]
         private static partial Regex MissingEmailAddressPattern();
 
         [GeneratedRegex("Not a valid email address", RegexOptions.Compiled)]
         private static partial Regex InvalidEmailSymbolsPattern();
 
+        // ------------
         // Phone number
+        // ------------
         [GeneratedRegex("Number field is required", RegexOptions.Compiled)]
         private static partial Regex MissingPhoneNumberPattern();
 
@@ -41,15 +50,19 @@ namespace EventsHandler.Services.UserCommunication
         [GeneratedRegex("Please enter mobile number according to the expected format", RegexOptions.Compiled)]
         private static partial Regex InvalidPhoneFormatPattern();
 
+        // ------------------
         // Template or its ID
+        // ------------------
         [GeneratedRegex("not a valid UUID", RegexOptions.Compiled)]
         private static partial Regex InvalidTemplateIdFormatPattern();
         
         [GeneratedRegex("Template not found", RegexOptions.Compiled)]
         private static partial Regex NotFoundTemplatePattern();
 
+        // ---------------
         // Personalization
-        [GeneratedRegex("Missing personalisation\\:[a-z.,\\ ]+", RegexOptions.Compiled)]
+        // ---------------
+        [GeneratedRegex("Missing personalisation\\:[a-z.,\\ ]+", RegexOptions.Compiled)]  // NOTE: This is not a typo, "personalization" is written this way in UK English
         private static partial Regex MissingPersonalizationPattern();
         #endregion
 
@@ -125,7 +138,7 @@ namespace EventsHandler.Services.UserCommunication
             string? message = null;
             Match match;
 
-            if ((match = MissingEmailAddressPattern().Match(errorMessage)).Success)  // NOTE: The email address is empty (whitespaces only)
+            if ((match = MissingEmailAddressPattern().Match(errorMessage)).Success)  // NOTE: The email address is empty (whitespaces only).
             {
                 message = GetEmailErrorMessage(match);
             }
@@ -135,6 +148,40 @@ namespace EventsHandler.Services.UserCommunication
             }
 
             return new BadRequestObjectResult(new ProcessingFailed.Simplified(HttpStatusCode.BadRequest, message ?? errorMessage));
+        }
+
+        /// <inheritdoc cref="IRespondingService.GetStandardized_Exception_ActionResult(ResultExecutingContext, IDictionary{string, string[]})"/>
+        ResultExecutingContext IRespondingService.GetStandardized_Exception_ActionResult(ResultExecutingContext context, IDictionary<string, string[]> errorDetails)
+        {
+            if (((IRespondingService)this).ContainsErrorMessage(errorDetails, out string errorMessage))
+            {
+                context.Result = ((IRespondingService)this).GetStandardized_Exception_ActionResult(errorMessage);
+            }
+
+            return context;
+        }
+
+        /// <inheritdoc cref="IRespondingService.ContainsErrorMessage(IDictionary{string, string[]}, out string)"/>
+        bool IRespondingService.ContainsErrorMessage(IDictionary<string, string[]> errorDetails, out string errorMessage)
+        {
+            // 1. Dictionary of all possible details (with potentially multiple errors each)
+            if (errorDetails.Count > 0)
+            {
+                // 2. First details with errors
+                KeyValuePair<string, string[]> firstErrorDetails = errorDetails.First();
+
+                if (firstErrorDetails.Value.Length > 0)
+                {
+                    // 3. First error
+                    errorMessage = firstErrorDetails.Value[0];
+
+                    return true;
+                }
+            }
+
+            errorMessage = Resources.Processing_ERROR_ExecutingContext_UnknownErrorDetails;
+
+            return false;
         }
         #endregion
 

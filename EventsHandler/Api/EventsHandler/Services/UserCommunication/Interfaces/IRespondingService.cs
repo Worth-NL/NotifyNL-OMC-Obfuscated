@@ -4,6 +4,7 @@ using EventsHandler.Behaviors.Mapping.Enums;
 using EventsHandler.Behaviors.Mapping.Models.Interfaces;
 using EventsHandler.Behaviors.Responding.Messages.Models.Details.Base;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace EventsHandler.Services.UserCommunication.Interfaces
 {
@@ -13,18 +14,35 @@ namespace EventsHandler.Services.UserCommunication.Interfaces
     public interface IRespondingService
     {
         /// <summary>
-        /// Gets standardized <see cref="IActionResult"/> based on the received <see cref="Exception"/>.
+        /// Gets the standardized <see cref="IActionResult"/> based on the received <see cref="Exception"/>.
         /// </summary>
         /// <param name="exception">The handled program exception.</param>
         internal ObjectResult GetStandardized_Exception_ActionResult(Exception exception);
 
         /// <summary>
-        /// Gets standardized <see cref="IActionResult"/> based on the received error message.
+        /// Gets the standardized <see cref="IActionResult"/> based on the received error message.
         /// </summary>
         /// <param name="errorMessage">
         ///   The message (it can be a handled <see cref="Exception"/> message or intercepted validation error message).
         /// </param>
         internal ObjectResult GetStandardized_Exception_ActionResult(string errorMessage);
+
+        /// <summary>
+        /// Gets the standardized <see cref="IActionResult"/> based on received error details (e.g., handled by <seealso cref="ActionFilterAttribute"/>).
+        /// </summary>
+        /// <param name="context">The intercepted result of API executing context.</param>
+        /// <param name="errorDetails">The encountered error details to be processed.</param>
+        internal ResultExecutingContext GetStandardized_Exception_ActionResult(ResultExecutingContext context, IDictionary<string, string[]> errorDetails);
+
+        /// <summary>
+        /// Tries to get valid and meaningful error message from the collection of encountered errors.
+        /// </summary>
+        /// <param name="errorDetails">The error details to be reviewed.</param>
+        /// <param name="errorMessage">The error message to be returned.</param>
+        /// <returns>
+        ///   <see langword="true"/> if an error message was found; otherwise, <see langword="false"/>.
+        /// </returns>
+        internal bool ContainsErrorMessage(IDictionary<string, string[]> errorDetails, out string errorMessage);
     }
 
     /// <summary>
