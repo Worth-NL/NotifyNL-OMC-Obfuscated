@@ -75,8 +75,7 @@ namespace EventsHandler.Attributes.Validation
         private static bool ContainsValidationProblems(ResultExecutingContext context, out ValidationProblemDetails? validationProblemDetails)
         {
             if (!context.ModelState.IsValid &&
-                context.Result is BadRequestObjectResult result &&
-                result.Value is ValidationProblemDetails details &&
+                context.Result is BadRequestObjectResult { Value: ValidationProblemDetails details } &&
                 details.Title == DefaultValues.Validation.ErrorsOccurred)
             {
                 validationProblemDetails = details;
