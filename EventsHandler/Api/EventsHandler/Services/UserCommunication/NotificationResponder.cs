@@ -13,8 +13,8 @@ using EventsHandler.Constants;
 using EventsHandler.Properties;
 using EventsHandler.Services.UserCommunication.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 
 namespace EventsHandler.Services.UserCommunication
 {
