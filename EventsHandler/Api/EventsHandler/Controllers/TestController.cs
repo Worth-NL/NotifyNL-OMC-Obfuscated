@@ -17,6 +17,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Runtime.InteropServices;
+using EventsHandler.Properties;
 
 namespace EventsHandler.Controllers
 {
@@ -189,7 +190,7 @@ namespace EventsHandler.Controllers
                     };
                 }
 
-                return Accepted(new ProcessingFailed.Simplified(HttpStatusCode.Accepted, $"{(notifyMethod == NotifyMethods.Email ? "Email" : "SMS")} was successfully send to NotifyNL"));
+                return Accepted(new ProcessingFailed.Simplified(HttpStatusCode.Accepted, $"{(notifyMethod == NotifyMethods.Email ? "Email" : "SMS")} {Resources.Test_NotifyNL_SUCCESS_NotificationSent}"));
             }
             catch (Exception exception)
             {
@@ -198,7 +199,7 @@ namespace EventsHandler.Controllers
         }
 
         private static NotificationResponse NotImplementedNotifyMethod()
-            => throw new ArgumentException(@"This notification method is not supported");
+            => throw new ArgumentException(Resources.Test_NotifyNL_ERROR_NotSupportedMethod);
         #endregion
     }
 }

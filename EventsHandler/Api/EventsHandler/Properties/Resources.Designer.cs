@@ -572,5 +572,23 @@ namespace EventsHandler.Properties {
                 return ResourceManager.GetString("Swagger_Version", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This notification method is not supported.
+        /// </summary>
+        internal static string Test_NotifyNL_ERROR_NotSupportedMethod {
+            get {
+                return ResourceManager.GetString("Test_NotifyNL_ERROR_NotSupportedMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to was successfully send to NotifyNL.
+        /// </summary>
+        internal static string Test_NotifyNL_SUCCESS_NotificationSent {
+            get {
+                return ResourceManager.GetString("Test_NotifyNL_SUCCESS_NotificationSent", resourceCulture);
+            }
+        }
     }
 }
