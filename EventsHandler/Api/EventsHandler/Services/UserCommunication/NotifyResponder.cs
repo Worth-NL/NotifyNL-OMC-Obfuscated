@@ -1,20 +1,21 @@
 ﻿// © 2024, Worth Systems.
 
-using EventsHandler.Behaviors.Responding.Messages.Models.Details.Base;
+using EventsHandler.Behaviors.Mapping.Enums;
 using EventsHandler.Behaviors.Responding.Messages.Models.Informations;
 using EventsHandler.Properties;
 using EventsHandler.Services.UserCommunication.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Notify.Exceptions;
-using Notify.Models.Responses;
 using System.Net;
 using System.Text.RegularExpressions;
+
+// TODO: Use details builder just like in NotificationResponder
 
 namespace EventsHandler.Services.UserCommunication
 {
     /// <inheritdoc cref="IRespondingService{TResult, TDetails}"/>
-    internal sealed partial class NotifyResponder : IRespondingService<NotificationResponse, BaseSimpleDetails>  // NOTE: "partial" is introduced by the new RegEx generation approach
+    internal sealed partial class NotifyResponder : IRespondingService<ProcessingResult, string>  // NOTE: "partial" is introduced by the new RegEx generation approach
     {
         #region RegEx patterns
         // -------
@@ -72,6 +73,7 @@ namespace EventsHandler.Services.UserCommunication
         {
             switch (exception)
             {
+                // NOTE: Issues reported by the Notify API .NET client: 400 BadRequest, 403 Forbidden
                 case NotifyClientException:
                 {
                     string message;
@@ -119,16 +121,19 @@ namespace EventsHandler.Services.UserCommunication
                     return ((IRespondingService)this).GetStandardized_Exception_ActionResult(message);
                 }
 
+                // NOTE: Authorization issues wrapped around 403 Forbidden status code
                 case NotifyAuthException:
-                    // NOTE: Authorization issues wrapped around 403 Forbidden status code
                     return new ObjectResult(new ProcessingFailed.Simplified(HttpStatusCode.Forbidden, exception.Message))
                     {
                         StatusCode = (int)HttpStatusCode.Forbidden
                     };
 
+                // NOTE: Unexpected issues wrapped around 500 Internal Server Error status code
                 default:
-                    // NOTE: Unexpected issues wrapped around 500 Internal Server Error status code
-                    return new BadRequestObjectResult(new ProcessingFailed.Simplified(HttpStatusCode.InternalServerError, exception.Message));
+                    return new ObjectResult(new ProcessingFailed.Simplified(HttpStatusCode.InternalServerError, exception.Message))
+                    {
+                        StatusCode = (int)HttpStatusCode.InternalServerError
+                    };
             }
         }
 
@@ -147,6 +152,7 @@ namespace EventsHandler.Services.UserCommunication
                 message = GetPhoneErrorMessage(match);
             }
 
+            // HttpStatus Code: 400 BadRequest
             return new BadRequestObjectResult(new ProcessingFailed.Simplified(HttpStatusCode.BadRequest, message ?? errorMessage));
         }
 
@@ -155,6 +161,7 @@ namespace EventsHandler.Services.UserCommunication
         {
             if (((IRespondingService)this).ContainsErrorMessage(errorDetails, out string errorMessage))
             {
+                // HttpStatus Code: 400 BadRequest
                 context.Result = ((IRespondingService)this).GetStandardized_Exception_ActionResult(errorMessage);
             }
 
@@ -187,15 +194,39 @@ namespace EventsHandler.Services.UserCommunication
 
         #region IRespondingService<TResult, TDetails>
         /// <inheritdoc cref="IRespondingService{TResult, TDetails}.GetStandardized_Processing_ActionResult(TResult, TDetails)"/>
-        ObjectResult IRespondingService<NotificationResponse, BaseSimpleDetails>.GetStandardized_Processing_ActionResult(NotificationResponse result, BaseSimpleDetails details)
+        ObjectResult IRespondingService<ProcessingResult, string>.GetStandardized_Processing_ActionResult(ProcessingResult result, string details)
         {
-            throw new NotImplementedException();
+            switch (result)
+            {
+                // HttpStatus Code: 202 Accepted
+                case ProcessingResult.Success:
+                {
+                    string resultMessage = $"{details} {Resources.Test_NotifyNL_SUCCESS_NotificationSent}";
+
+                    return new ObjectResult(new ProcessingFailed.Simplified(HttpStatusCode.Accepted, resultMessage))
+                    {
+                        StatusCode = (int)HttpStatusCode.Accepted
+                    };
+                }
+
+                // HttpStatus Code: 400 BadRequest
+                case ProcessingResult.Failure:
+                    return ((IRespondingService)this).GetStandardized_Exception_ActionResult(details);
+
+                // HttpStatus Code: 500 Internal Server Error
+                default:
+                    return new ObjectResult(Resources.Operation_RESULT_NotImplemented)
+                    {
+                        StatusCode = (int)HttpStatusCode.InternalServerError
+                    };
+            }
         }
 
         /// <inheritdoc cref="IRespondingService{TResult, TDetails}.GetStandardized_Processing_Failed_ActionResult(TDetails)"/>
-        ObjectResult IRespondingService<NotificationResponse, BaseSimpleDetails>.GetStandardized_Processing_Failed_ActionResult(BaseSimpleDetails details)
+        ObjectResult IRespondingService<ProcessingResult, string>.GetStandardized_Processing_Failed_ActionResult(string details)
         {
-            throw new NotImplementedException();
+            // HttpStatus Code: 400 BadRequest
+            return ((IRespondingService<ProcessingResult, string>)this).GetStandardized_Processing_ActionResult(ProcessingResult.Failure, details);
         }
         #endregion
 

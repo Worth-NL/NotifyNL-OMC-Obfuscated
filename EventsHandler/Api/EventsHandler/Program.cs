@@ -4,8 +4,8 @@ using EventsHandler.Behaviors.Communication.Strategy;
 using EventsHandler.Behaviors.Communication.Strategy.Interfaces;
 using EventsHandler.Behaviors.Communication.Strategy.Manager;
 using EventsHandler.Behaviors.Communication.Strategy.Models.DTOs;
+using EventsHandler.Behaviors.Mapping.Enums;
 using EventsHandler.Behaviors.Mapping.Models.POCOs.NotificatieApi;
-using EventsHandler.Behaviors.Responding.Messages.Models.Details.Base;
 using EventsHandler.Behaviors.Responding.Results.Builder;
 using EventsHandler.Behaviors.Responding.Results.Builder.Interface;
 using EventsHandler.Configuration;
@@ -257,7 +257,7 @@ namespace EventsHandler
             services.AddSingleton<IRespondingService<NotificationEvent>, NotificationResponder>();
             
             // Explicit interfaces
-            services.AddSingleton<IRespondingService<NotificationResponse, BaseSimpleDetails>, NotifyResponder>();
+            services.AddSingleton<IRespondingService<ProcessingResult, string>, NotifyResponder>();
         }
 
         /// <summary>

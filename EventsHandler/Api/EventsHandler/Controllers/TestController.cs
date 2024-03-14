@@ -4,10 +4,11 @@ using Asp.Versioning;
 using EventsHandler.Attributes.Authorization;
 using EventsHandler.Attributes.Validation;
 using EventsHandler.Behaviors.Communication.Enums;
-using EventsHandler.Behaviors.Responding.Messages.Models.Details.Base;
+using EventsHandler.Behaviors.Mapping.Enums;
 using EventsHandler.Behaviors.Responding.Messages.Models.Informations;
 using EventsHandler.Configuration;
 using EventsHandler.Constants;
+using EventsHandler.Properties;
 using EventsHandler.Services.UserCommunication.Interfaces;
 using EventsHandler.Utilities.Swagger.Examples;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,7 @@ using Notify.Client;
 using Notify.Models.Responses;
 using Swashbuckle.AspNetCore.Filters;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 using System.Runtime.InteropServices;
-using EventsHandler.Properties;
 
 namespace EventsHandler.Controllers
 {
@@ -33,7 +32,7 @@ namespace EventsHandler.Controllers
     public sealed class TestController : ControllerBase
     {
         private readonly WebApiConfiguration _configuration;
-        private readonly IRespondingService<NotificationResponse, BaseSimpleDetails> _responder;
+        private readonly IRespondingService<ProcessingResult, string> _responder;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="TestController"/> class.
@@ -42,7 +41,7 @@ namespace EventsHandler.Controllers
         /// <param name="responder">The output standardization service (UX/UI).</param>
         public TestController(
             WebApiConfiguration configuration,
-            IRespondingService<NotificationResponse, BaseSimpleDetails> responder)
+            IRespondingService<ProcessingResult, string> responder)
         {
             this._configuration = configuration;
             this._responder = responder;
@@ -151,7 +150,6 @@ namespace EventsHandler.Controllers
             string? templateId,
             Dictionary<string, object> personalization)
         {
-            // TODO: This logic should be extracted into dedicated services (especially the logging errors part, as an extension of existing IRespondingService)
             try
             {
                 // Initialize the .NET client of NotifyNL API service
@@ -189,8 +187,7 @@ namespace EventsHandler.Controllers
                         _ => NotImplementedNotifyMethod()
                     };
                 }
-
-                return Accepted(new ProcessingFailed.Simplified(HttpStatusCode.Accepted, $"{(notifyMethod == NotifyMethods.Email ? "Email" : "SMS")} {Resources.Test_NotifyNL_SUCCESS_NotificationSent}"));
+                return this._responder.GetStandardized_Processing_ActionResult(ProcessingResult.Success, templateType);
             }
             catch (Exception exception)
             {
