@@ -84,9 +84,9 @@ namespace EventsHandler.Extensions
             byte[] buffer = Encoding.UTF8.GetBytes(originalTextValue);
 
             using var memoryStream = new MemoryStream();
-            using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress, leaveOpen: true))  // NOTE: Leaves MemoryStream open, so it's data can be read in the final statement
+            await using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress, leaveOpen: true))  // NOTE: Leaves MemoryStream open, so it's data can be read in the final statement
             {
-                gzipStream.Write(buffer, offset: 0, count: buffer.Length);
+                await gzipStream.WriteAsync(buffer, offset: 0, count: buffer.Length, cancellationToken);
             }
 
             return memoryStream.ToArray().Base64Encode();
@@ -108,10 +108,10 @@ namespace EventsHandler.Extensions
             byte[] buffer = compressedTextValue.Base64Decode();
 
             using var memoryStream = new MemoryStream(buffer);
-            using var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+            await using var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
             using var resultStream = new MemoryStream();
 
-            gzipStream.CopyTo(resultStream);
+            await gzipStream.CopyToAsync(resultStream, cancellationToken);
 
             return Encoding.UTF8.GetString(resultStream.ToArray());
         }
