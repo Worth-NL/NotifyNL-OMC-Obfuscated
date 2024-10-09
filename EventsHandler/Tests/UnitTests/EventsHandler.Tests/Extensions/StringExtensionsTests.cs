@@ -127,7 +127,7 @@ namespace EventsHandler.UnitTests.Extensions
             Assert.That(actualResult, Is.Empty);
         }
 
-        [Test, Ignore("Suspicious behavior on remote server")]
+        [Test]
         public async Task CompressGZipAsync_ReturnsExpectedString()
         {
             // Act

@@ -173,7 +173,7 @@ namespace EventsHandler.UnitTests.Services.DataSending
                 Times.Once);
         }
 
-        [Test, Ignore("Suspicious behavior on remote server")]
+        [Test]
         public async Task GetEncoded_EncodesReferenceToBase64()
         {
             // Arrange
