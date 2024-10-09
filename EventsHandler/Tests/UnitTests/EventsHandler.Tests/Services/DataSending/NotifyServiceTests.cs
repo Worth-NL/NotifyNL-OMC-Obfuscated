@@ -174,7 +174,7 @@ namespace EventsHandler.UnitTests.Services.DataSending
         }
 
         [Test]
-        public async Task GetEncoded_EncodesReferenceToBase64()
+        public async Task SendSmsAsync_Using_CompressGzipAsync_EncodesAndCompressesReferenceToBase64()
         {
             // Arrange
             Mock<INotifyClient> mockedClient = GetMockedNotifyClient();
