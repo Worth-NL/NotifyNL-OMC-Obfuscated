@@ -108,12 +108,13 @@ namespace EventsHandler.UnitTests.Extensions
               "\"PartyId\":\"dfbf6cf9-1feb-4f11-98a1-09d80e122bf2\"" +
             "}";
 
-        private const string CompressedEncodedString = "eJytUrFy3CAQ/RfVRgKkk4TKpHJjp3C6NCtY7riTQIOQzz6P/z2LMhknRWYyk0ADy9t9b9/yVjyE5KzTkFzwxfBWgE4Oi" +
-                                                       "6HQESFhcVdcwANMFLnBBT0FIq5hizqD1gRpWzMI/Ywxv1OJG8AlvS4ZcEppWYeqmsbydryWK3gzhhc2Q/TupdTrwrw7z3" +
-                                                       "hEX/qpCgt6lrMr0gNTOLoKFlc9i+pnSV9JbsVoQDMpOs0a3mrWQ9Mz3rYCezgYoyUJGmPwIR7Bu5Vay1I4F02nRKfo9Rl" +
-                                                       "jimG74uTOlxM6AyRsc8b5IyEZIcJ4Rp2ePrqgJni574FXmQDXaXMp/RlBJODTNYRodh58/E1P8X5XnEKw5nGn+gez9sF8" +
-                                                       "OJUvbS8V56DIoFqwpueWqa5uGLbGWoXWSNS/jPJrnP4X/48vseYAbw5Kjpa1bW1ZPrN+RMlAAQpD86plQxrI+pmqGEqbS" +
-                                                       "YTksmFcMaGehBwOcqhV2TU8r28b5/ITJ3t5Nu8zrHhvKOUvm/0CMb3uCcaOttWWSCyOrLFCMNWDIFrTcxSSRMvi/TsnZv4y";
+        private const string CompressedEncodedString = "H4sIAAAAAAAACq1SsXLcIBD9F9VGAqSThMqkcmOncLo0K1juuJNAg5DPPo//PYsyGSdFZjKTQAPL231v3/JWPITkrNOQX" +
+                                                       "PDF8FaATg6LodARIWFxV1zAA0wUucEFPQUirmGLOoPWBGlbMwj9jDG/U4kbwCW9LhlwSmlZh6qaxvJ2vJYreDOGFzZD9O" +
+                                                       "6l1OvCvDvPeERf+qkKC3qWsyvSA1M4ugoWVz2L6mdJX0luxWhAMyk6zRreatZD0zPetgJ7OBijJQkaY/AhHsG7lVrLUjg" +
+                                                       "XTadEp+j1GWOKYbvi5M6XEzoDJGxzxvkjIRkhwnhGnZ4+uqAmeLnvgVeZANdpcyn9GUEk4NM1hGh2Hnz8TU/xflecQrDm" +
+                                                       "caf6B7P2wXw4lS9tLxXnoMigWrCm55aprm4YtsZahdZI1L+M8muc/hf/jy+x5gBvDkqOlrVtbVk+s35EyUABCkPzqmVDG" +
+                                                       "sj6maoYSptJhOSyYVwxoZ6EHA5yqFXZNTyvbxvn8hMne3k27zOseG8o5S+b/QIxve4Jxo621ZZILI6ssUIw1YMgWtNzFJ" +
+                                                       "JEy+L9O1gxSL0cAwAA";
         // ReSharper restore StringLiteralTypo
 
         [Test]

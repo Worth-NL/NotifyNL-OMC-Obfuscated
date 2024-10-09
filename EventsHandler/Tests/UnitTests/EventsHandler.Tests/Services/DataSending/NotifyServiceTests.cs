@@ -223,12 +223,12 @@ namespace EventsHandler.UnitTests.Services.DataSending
             // Assert
             const string encodedReference =
                 // ReSharper disable StringLiteralTypo
-                "eJydUcFu3CAQ/RfOwQaMzdrXnHppekgvvQ0w3iXrhRXGiZIo/97BVZQ2Ug+tsRB+85j3PO+VfU0lzMFBCSmy6ZWBKwHZxFxGKMhu2B" +
-                "kiwELIC5wxEpBxTVt2lbQWKNtaSRgvmGudWrwAnMvztRJOpVzXqW3TFWOFm4JraTzGE8CxqegRL01cWjIASzqGFq6hfZTte4/Yurk3" +
-                "To4DHw/Kc43KcugHw702ZtSDVtYbcmBziikfIYaV/qVqq8MgO6GMoOoj5pLT9oRLeDifMHiA6LfgQzwSs/qwAJmIyT6gK/cf7sm8aP" +
-                "Y1ibbq4LpsoZS/M0gLYnlKKftdDu/+sMXebtgppdnf7VL/MqQ9gY8J1Q+tRA/oej7OveUa7MytNIa7HkaaDhgD82+Zfc81yf8T/BX2" +
-                "SoCUzno7zlxq3XOtleZ27jQXdhbDILoORUeiNOMLdfd07VLzEKrjYuRK3Us5aXqHRvRK0POjDuUWVvziiShVpynhA6+HT1vFRyEVtf" +
-                "8GuTzvFw5m6HWnJP+0KSnG9xp7+wlqs+l/";
+                "H4sIAAAAAAAACp1RwW7cIBD9F87BBozN2teceml6SC+9DTDeJeuFFcaJkij/3sFVlDZSD62xEH7zmPc875V9TSXMwUEJKbLplYErAd" +
+                "nEXEYoyG7YGSLAQsgLnDESkHFNW3aVtBYo21pJGC+Ya51avACcy/O1Ek6lXNepbdMVY4WbgmtpPMYTwLGp6BEvTVxaMgBLOoYWrqF9" +
+                "lO17j9i6uTdOjgMfD8pzjcpy6AfDvTZm1INW1htyYHOKKR8hhpX+pWqrwyA7oYyg6iPmktP2hEt4OJ8weIDot+BDPBKz+rAAmYjJPq" +
+                "Ar9x/uybxo9jWJturgumyhlL8zSAtieUop+10O7/6wxd5u2Cml2d/tUv8ypD2BjwnVD61ED+h6Ps695RrszK00hrseRpoOGAPzb5l9" +
+                "zzXJ/xP8FfZKgJTOejvOXGrdc62V5nbuNBd2FsMgug5FR6I04wt193TtUvMQquNi5ErdSzlpeodG9ErQ86MO5RZW/OKJKFWnKeEDr4" +
+                "dPW8VHIRW1/wa5PO8XDmbodack/7QpKcb3Gnv7CVO18pvsAgAA";
                 // ReSharper restore StringLiteralTypo
 
             mockedClient
