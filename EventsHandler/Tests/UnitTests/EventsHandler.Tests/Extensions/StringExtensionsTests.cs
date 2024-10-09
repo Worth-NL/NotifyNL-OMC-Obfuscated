@@ -131,10 +131,11 @@ namespace EventsHandler.UnitTests.Extensions
         public async Task CompressGZipAsync_ReturnsExpectedString()
         {
             // Act
-            string actualResult = await TestReferenceString.CompressGZipAsync(CancellationToken.None);
+            string compressedReference = await TestReferenceString.CompressGZipAsync(CancellationToken.None);
+            string decompressedReference = await compressedReference.DecompressGZipAsync(CancellationToken.None);
 
             // Assert
-            Assert.That(actualResult, Is.EqualTo(CompressedEncodedString));
+            Assert.That(decompressedReference, Is.EqualTo(TestReferenceString));
         }
 
         [Test]
