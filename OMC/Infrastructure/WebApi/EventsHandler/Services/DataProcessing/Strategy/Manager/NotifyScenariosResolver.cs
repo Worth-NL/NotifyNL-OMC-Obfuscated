@@ -82,6 +82,12 @@ namespace EventsHandler.Services.DataProcessing.Strategy.Manager
                         /* {1} */ ConfigExtensions.GetGenericVariableObjectTypeEnvVarName()));
             }
 
+            // Product scenarios
+            if (IsProductScenario(model))
+            {
+                //Create Scenario
+            }
+
             // Scenario #5: "Decision made"
             if (IsDecisionScenario(model))
             {
@@ -138,6 +144,22 @@ namespace EventsHandler.Services.DataProcessing.Strategy.Manager
                 Action:   Actions.Create,
                 Channel:  Channels.Decisions,
                 Resource: Resources.Decision
+            };
+        }
+
+        /// <summary>
+        ///   <inheritdoc cref="IsCaseScenario(NotificationEvent)"/>
+        /// </summary>
+        /// <remarks>
+        ///   This check is verifying whether decision scenarios would be processed.
+        /// </remarks>
+        private static bool IsProductScenario(NotificationEvent notification)
+        {
+            return notification is
+            {
+                Action: Actions.Create,
+                Channel: Channels.Products,
+                Resource: Resources.Product
             };
         }
         #endregion

@@ -40,6 +40,12 @@ namespace ZhvModels.Mapping.Enums.NotificatieApi
         /// The "decision" resource.
         /// </summary>
         [JsonPropertyName("besluitinformatieobject")]
-        Decision = 4
+        Decision = 4,
+
+        /// <summary>
+        /// The "product" resource.
+        /// </summary>
+        [JsonPropertyName("product")]
+        Product = 5
     }
 }
